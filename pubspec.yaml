@@ -1,0 +1,43 @@
+name: flutter_shopping
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_product_page:
+    git:
+      url: https://github.com/Iconica-Development/flutter_product_page
+      ref: 1.0.0
+  flutter_shopping_cart:
+    git:
+      url: https://github.com/Iconica-Development/flutter_shopping_cart
+      ref: 1.0.0
+  flutter_order_details:
+    git:
+      url: https://github.com/Iconica-Development/flutter_order_details
+      ref: feat/v1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_iconica_analysis:
+    git:
+      url: https://github.com/Iconica-Development/flutter_iconica_analysis
+      ref: 7.0.0
+
+flutter:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
