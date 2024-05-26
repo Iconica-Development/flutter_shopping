@@ -1,5 +1,5 @@
-name: flutter_shopping
-description: "A new Flutter project."
+name: example
+description: Demonstrates how to use the flutter_shopping package."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
@@ -9,7 +9,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: any
+  flutter_hooks: ^0.20.0
+  hooks_riverpod: ^2.1.1
+  go_router: 12.1.3
+
+  # Iconica packages
+
+  ## Userstories
+  flutter_shopping:
+    path: ../
+
+  ## Normal Packages
   flutter_product_page:
     git:
       url: https://github.com/Iconica-Development/flutter_product_page
@@ -32,7 +42,9 @@ dev_dependencies:
       ref: 7.0.0
 
 flutter:
-  # assets:
+  uses-material-design: true
+  assets:
+      - dotenv
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
