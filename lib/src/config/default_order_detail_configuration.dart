@@ -30,7 +30,7 @@ OrderDetailConfiguration getDefaultOrderDetailConfiguration(
               outputKey: "email",
               textController: TextEditingController(),
               subtitle: "* We will send your order confirmation here",
-              // hint: ""
+              hint: "your_email@mail.com",
             ),
           ],
         ),
@@ -38,7 +38,7 @@ OrderDetailConfiguration getDefaultOrderDetailConfiguration(
           formKey: GlobalKey<FormState>(),
           stepName: "Adress Information",
           fields: [
-            OrderAdresInput(
+            OrderAddressInput(
               title: "Your adress",
               outputKey: "adres",
               textController: TextEditingController(),

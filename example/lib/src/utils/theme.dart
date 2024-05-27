@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 ThemeData getTheme() => ThemeData(
+      scaffoldBackgroundColor: const Color.fromRGBO(250, 249, 246, 1),
       textTheme: const TextTheme(
         labelMedium: TextStyle(
           fontSize: 14,
