@@ -3,7 +3,11 @@ import "package:flutter_order_details/flutter_order_details.dart";
 import "package:flutter_shopping/main.dart";
 import "package:go_router/go_router.dart";
 
-/// TODO
+/// Default on complete order details function.
+/// This function will navigate to the order success or order failed page.
+///
+/// You can create your own implementation if you decide to use a different
+/// approach.
 Future<void> onCompleteOrderDetails(
   BuildContext context,
   FlutterShoppingConfiguration configuration,
@@ -28,14 +32,20 @@ Future<void> onCompleteOrderDetails(
   }
 }
 
-/// TODO
+/// Default on complete shopping cart function.
+///
+/// You can create your own implementation if you decide to use a different
+/// approach.
 void onCompleteShoppingCart(
   BuildContext context,
 ) {
   context.go(FlutterShoppingRoutes.orderDetails);
 }
 
-/// TODO
+/// Default on complete product page function.
+///
+/// You can create your own implementation if you decide to use a different
+/// approach.
 void onCompleteProductPage(
   BuildContext context,
 ) {

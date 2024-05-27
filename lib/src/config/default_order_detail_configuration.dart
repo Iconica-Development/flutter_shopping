@@ -3,7 +3,8 @@ import "package:flutter_order_details/flutter_order_details.dart";
 import "package:flutter_shopping/main.dart";
 import "package:go_router/go_router.dart";
 
-/// TODO
+/// Default order detail configuration for the app.
+/// This configuration is used to create the order detail page.
 OrderDetailConfiguration getDefaultOrderDetailConfiguration(
   BuildContext context,
   FlutterShoppingConfiguration configuration,

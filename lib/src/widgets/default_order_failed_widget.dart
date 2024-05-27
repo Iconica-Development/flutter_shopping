@@ -1,15 +1,15 @@
 import "package:flutter/material.dart";
 import "package:flutter_shopping/main.dart";
 
-/// TODO
+/// Default order failed widget.
 class DefaultOrderFailed extends StatelessWidget {
-  /// TODO
+  /// Constructor for the DefaultOrderFailed.
   const DefaultOrderFailed({
     required this.configuration,
     super.key,
   });
 
-  /// TODO
+  /// Configuration for the user-story.
   final FlutterShoppingConfiguration configuration;
 
   @override

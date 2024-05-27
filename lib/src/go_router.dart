@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
-/// TODO
+/// Builder with a fade transition for when navigating to a new screen.
 CustomTransitionPage buildScreenWithFadeTransition<T>({
   required BuildContext context,
   required GoRouterState state,
@@ -14,7 +14,7 @@ CustomTransitionPage buildScreenWithFadeTransition<T>({
           FadeTransition(opacity: animation, child: child),
     );
 
-/// TODO
+/// Builder without a transition for when navigating to a new screen.
 CustomTransitionPage buildScreenWithoutTransition<T>({
   required BuildContext context,
   required GoRouterState state,

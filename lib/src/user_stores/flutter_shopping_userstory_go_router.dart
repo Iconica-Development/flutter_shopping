@@ -7,7 +7,7 @@ import "package:flutter_shopping/src/widgets/default_order_failed_widget.dart";
 import "package:flutter_shopping/src/widgets/default_order_succes_widget.dart";
 import "package:go_router/go_router.dart";
 
-/// TODO
+/// All the routes for the shopping story.
 List<GoRoute> getShoppingStoryRoutes({
   required FlutterShoppingConfiguration configuration,
 }) =>
@@ -36,8 +36,7 @@ List<GoRoute> getShoppingStoryRoutes({
         name: "orderDetails",
         path: FlutterShoppingRoutes.orderDetails,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          if (configuration.showOrderDetails &&
-              configuration.orderDetailsBuilder != null) {
+          if (configuration.orderDetailsBuilder != null) {
             return buildScreenWithFadeTransition(
               context: context,
               state: state,
