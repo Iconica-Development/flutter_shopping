@@ -1,8 +1,0 @@
-environment_config:
-  dotenv_path: dotenv
-  path: env_config.dart
-  fields:
-    STRIPE_PUBLISHABLE_KEY:
-      dotenv: true
-      config_field: false
-      default: ""
