@@ -6,7 +6,7 @@ ThemeData getTheme() => ThemeData(
         labelMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Color.fromRGBO(0, 0, 0, 1),
+          color: Colors.black,
         ),
         titleMedium: TextStyle(
           fontSize: 16,
@@ -15,18 +15,18 @@ ThemeData getTheme() => ThemeData(
         ),
       ),
       inputDecorationTheme: const InputDecorationTheme(
-        fillColor: Color.fromRGBO(255, 255, 255, 1),
+        fillColor: Colors.white,
       ),
       colorScheme: const ColorScheme.light(
         primary: Color.fromRGBO(64, 87, 122, 1),
-        secondary: Color.fromRGBO(255, 255, 255, 1),
+        secondary: Colors.white,
         surface: Color.fromRGBO(250, 249, 246, 1),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color.fromRGBO(64, 87, 122, 1),
         titleTextStyle: TextStyle(
           fontSize: 28,
-          color: Color.fromRGBO(255, 255, 255, 1),
+          color: Colors.white,
         ),
       ),
     );

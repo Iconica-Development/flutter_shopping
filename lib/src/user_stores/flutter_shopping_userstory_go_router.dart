@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
-import "package:flutter_shopping/main.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:flutter_shopping/src/config/default_order_detail_configuration.dart";
 import "package:flutter_shopping/src/go_router.dart";
 import "package:flutter_shopping/src/widgets/default_order_failed_widget.dart";

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
-import "package:flutter_shopping/main.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 
 /// Default order detail configuration for the app.
@@ -36,11 +36,11 @@ OrderDetailConfiguration getDefaultOrderDetailConfiguration(
         ),
         OrderDetailStep(
           formKey: GlobalKey<FormState>(),
-          stepName: "Adress Information",
+          stepName: "Address Information",
           fields: [
             OrderAddressInput(
-              title: "Your adress",
-              outputKey: "adres",
+              title: "Your address",
+              outputKey: "address",
               textController: TextEditingController(),
             ),
           ],
@@ -57,9 +57,8 @@ OrderDetailConfiguration getDefaultOrderDetailConfiguration(
           ],
         ),
       ],
-      onCompleted: (OrderResult result) async {
-        await onCompleteOrderDetails(context, configuration, result);
-      },
+      onCompleted: (OrderResult result) async =>
+          onCompleteOrderDetails(context, configuration, result),
       appBar: AppBar(
         title: const Text("Order Details"),
         leading: IconButton(

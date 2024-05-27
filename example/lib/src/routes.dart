@@ -1,7 +1,7 @@
 import "package:example/src/configuration/configuration.dart";
 import "package:example/src/ui/homepage.dart";
 import "package:example/src/utils/go_router.dart";
-import "package:flutter_shopping/main.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 

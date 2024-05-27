@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping/main.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 
 class Homepage extends StatelessWidget {
@@ -12,9 +12,7 @@ class Homepage extends StatelessWidget {
             label: const Text("1"),
             child: IconButton(
               icon: const Icon(Icons.shopping_cart_outlined, size: 50),
-              onPressed: () {
-                context.go(FlutterShoppingRoutes.shop);
-              },
+              onPressed: () => context.go(FlutterShoppingRoutes.shop),
             ),
           ),
         ),
