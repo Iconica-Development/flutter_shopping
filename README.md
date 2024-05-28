@@ -88,7 +88,7 @@ FlutterShoppingConfiguration(
             // (RECOMMENDED) Function that is fired when the shop selection
             // changes. You could use this to clear your shopping cart or to
             // change the products so they belong to the correct shop again.
-            onShopSelectionChange: (shopId) => productService.clear(),
+            onShopSelectionChange: (ProductPageShop shop) => productService.clear(),
 
             // (RECOMMENDED) The shop that is initially selected.
             // Must be one of the shops in the [shops] list.
