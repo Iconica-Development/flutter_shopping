@@ -19,15 +19,16 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
         configuration: ProductPageConfiguration(
           // (REQUIRED): List of shops that should be displayed
           // If there is only one, make a list with just one shop.
-          shops: getShops(),
+          shops: Future.value(getShops()),
 
           // (REQUIRED): Function to add a product to the cart
           onAddToCart: (ProductPageProduct product) =>
               productService.addProduct(product as MyProduct),
 
           // (REQUIRED): Function to get the products for a shop
-          getProducts: (String shopId) => Future<ProductPageContent>.value(
-            getShopContent(shopId),
+          getProducts: (ProductPageShop shop) =>
+              Future<ProductPageContent>.value(
+            getShopContent(shop.id),
           ),
 
           // (REQUIRED): Function to navigate to the shopping cart
@@ -46,11 +47,12 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           // (RECOMMENDED) Function that is fired when the shop selection
           // changes. You could use this to clear your shopping cart or to
           // change the products so they belong to the correct shop again.
-          onShopSelectionChange: (shopId) => productService.clear(),
+          onShopSelectionChange: (ProductPageShop shop) =>
+              productService.clear(),
 
           // (RECOMMENDED) The shop that is initially selected.
           // Must be one of the shops in the [shops] list.
-          initialShop: getShops().first,
+          initialShopId: getShops().first.id,
 
           // (RECOMMENDED) Localizations for the product page.
           localizations: const ProductPageLocalization(),
