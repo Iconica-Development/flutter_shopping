@@ -63,7 +63,7 @@ OrderDetailConfiguration getDefaultOrderDetailConfiguration(
         title: const Text("Order Details"),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => context.go(FlutterShoppingRoutes.shoppingCart),
+          onPressed: () => context.go(FlutterShoppingPathRoutes.shoppingCart),
         ),
       ),
     );

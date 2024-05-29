@@ -12,7 +12,7 @@ class Homepage extends StatelessWidget {
             label: const Text("1"),
             child: IconButton(
               icon: const Icon(Icons.shopping_cart_outlined, size: 50),
-              onPressed: () => context.go(FlutterShoppingRoutes.shop),
+              onPressed: () => context.go(FlutterShoppingPathRoutes.shop),
             ),
           ),
         ),

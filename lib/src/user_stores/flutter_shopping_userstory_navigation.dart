@@ -26,9 +26,9 @@ Future<void> onCompleteOrderDetails(
   }
 
   if (succesful) {
-    go(FlutterShoppingRoutes.orderSuccess);
+    go(FlutterShoppingPathRoutes.orderSuccess);
   } else {
-    go(FlutterShoppingRoutes.orderFailed);
+    go(FlutterShoppingPathRoutes.orderFailed);
   }
 }
 
@@ -39,7 +39,7 @@ Future<void> onCompleteOrderDetails(
 void onCompleteShoppingCart(
   BuildContext context,
 ) {
-  context.go(FlutterShoppingRoutes.orderDetails);
+  context.go(FlutterShoppingPathRoutes.orderDetails);
 }
 
 /// Default on complete product page function.
@@ -49,5 +49,5 @@ void onCompleteShoppingCart(
 void onCompleteProductPage(
   BuildContext context,
 ) {
-  context.go(FlutterShoppingRoutes.shoppingCart);
+  context.go(FlutterShoppingPathRoutes.shoppingCart);
 }

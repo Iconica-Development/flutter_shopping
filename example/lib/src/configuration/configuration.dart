@@ -15,7 +15,12 @@ final ProductService<MyProduct> productService = ProductService([]);
 FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
     FlutterShoppingConfiguration(
       // (REQUIRED): Shop builder configuration
-      shopBuilder: (BuildContext context) => ProductPageScreen(
+      shopBuilder: (
+        BuildContext context,
+        String? initialBuildShopId,
+        String? streetName,
+      ) =>
+          ProductPageScreen(
         configuration: ProductPageConfiguration(
           // (REQUIRED): List of shops that should be displayed
           // If there is only one, make a list with just one shop.
@@ -71,6 +76,9 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
             ),
           ),
         ),
+
+        // (OPTIONAL): Initial build shop id that overrides the initialShop
+        initialBuildShopId: initialBuildShopId,
       ),
 
       // (REQUIRED): Shopping cart builder configuration
@@ -128,7 +136,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
                 color: Colors.white,
               ),
               onPressed: () {
-                context.go(FlutterShoppingRoutes.shop);
+                context.go(FlutterShoppingPathRoutes.shop);
               },
             ),
           ),

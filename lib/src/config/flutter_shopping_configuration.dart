@@ -15,7 +15,11 @@ class FlutterShoppingConfiguration {
   });
 
   /// Builder for the shop/product page.
-  final Widget Function(BuildContext context) shopBuilder;
+  final Widget Function(
+    BuildContext context,
+    String? initialBuildShopId,
+    String? streetName,
+  ) shopBuilder;
 
   /// Builder for the shopping cart page.
   final Widget Function(BuildContext context) shoppingCartBuilder;
