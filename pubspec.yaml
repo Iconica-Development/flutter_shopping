@@ -21,7 +21,7 @@ dependencies:
   flutter_order_details:
     git:
       url: https://github.com/Iconica-Development/flutter_order_details
-      ref: 1.0.0
+      ref: 1.0.1
 
 dev_dependencies:
   flutter_test:
