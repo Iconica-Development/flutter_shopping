@@ -127,6 +127,27 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           // (OPTIONAL) title above product list:
           title: "Products",
 
+          /// (OPTIONAL) no content builder for when there are no products
+          /// in the shopping cart.
+          noContentBuilder: (context) => const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 128),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.warning,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    "Geen producten in winkelmandje",
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // (OPTIONAL) custom appbar:
           appBar: AppBar(
             title: const Text("Shopping Cart"),
