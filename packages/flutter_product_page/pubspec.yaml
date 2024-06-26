@@ -1,8 +1,7 @@
 name: flutter_product_page
 description: "A Flutter module for the product page"
 publish_to: 'none'
-version: 1.0.0+1
-homepage:
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.4 <4.0.0'

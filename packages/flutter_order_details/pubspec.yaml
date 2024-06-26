@@ -1,7 +1,6 @@
 name: flutter_order_details
 description: "A Flutter module for order details."
-version: 1.0.0+1
-homepage:
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
