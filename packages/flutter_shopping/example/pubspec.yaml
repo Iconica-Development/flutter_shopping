@@ -19,14 +19,6 @@ dependencies:
   flutter_shopping:
     path: ../
 
-  ## Normal Packages
-  flutter_product_page:
-    path: ../../flutter_product_page
-  flutter_shopping_cart:
-    path: ../../flutter_shopping_cart
-  flutter_order_details:
-    path: ../../flutter_order_details
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

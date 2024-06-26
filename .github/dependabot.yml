@@ -1,0 +1,22 @@
+version: 2
+
+updates:
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_order_details"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_product_page"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_shopping"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_shopping_cart"
+    schedule:
+      interval: "weekly"

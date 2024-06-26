@@ -16,14 +16,8 @@ dependencies:
     git:
       url: https://github.com/Iconica-Development/flutter_nested_categories
       ref: 0.0.1
-  flutter_product_page:
-    path: ../../flutter_product_page
-  flutter_shopping_cart:
-    path: ../../flutter_shopping_cart
-  flutter_order_details:
-    path: ../../flutter_order_details
   flutter_shopping:
-    path: ../../flutter_shopping
+    path: ../
 
 dev_dependencies:
   flutter_test:
