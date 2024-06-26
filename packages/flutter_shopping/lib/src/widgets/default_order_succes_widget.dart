@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "../../flutter_shopping.dart";
 
 /// Default order success widget.
 class DefaultOrderSucces extends StatelessWidget {

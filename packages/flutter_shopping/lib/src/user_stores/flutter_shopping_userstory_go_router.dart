@@ -1,8 +1,8 @@
 import "package:flutter_order_details/flutter_order_details.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
-import "package:flutter_shopping/src/config/default_order_detail_configuration.dart";
-import "package:flutter_shopping/src/widgets/default_order_failed_widget.dart";
-import "package:flutter_shopping/src/widgets/default_order_succes_widget.dart";
+import "../../flutter_shopping.dart";
+import "../config/default_order_detail_configuration.dart";
+import "../widgets/default_order_failed_widget.dart";
+import "../widgets/default_order_succes_widget.dart";
 import "package:go_router/go_router.dart";
 
 /// All the routes for the shopping story.
