@@ -1,6 +1,6 @@
 import "package:example/src/models/my_product.dart";
 import "package:example/src/models/my_shop.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// This function should have your own implementation. Generally this would
 /// contain some API call to fetch the list of shops.

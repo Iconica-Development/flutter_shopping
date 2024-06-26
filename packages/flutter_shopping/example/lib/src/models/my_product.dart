@@ -1,5 +1,4 @@
-import "package:flutter_product_page/flutter_product_page.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 class MyProduct extends ShoppingCartProduct with ProductPageProduct {
   MyProduct({

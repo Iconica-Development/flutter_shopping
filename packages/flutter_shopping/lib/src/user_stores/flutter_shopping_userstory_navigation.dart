@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_order_details/flutter_order_details.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 

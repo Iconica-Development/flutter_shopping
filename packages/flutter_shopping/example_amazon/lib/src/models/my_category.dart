@@ -1,4 +1,4 @@
-import "package:flutter_product_page/flutter_product_page.dart";
+import 'package:flutter_shopping/flutter_shopping.dart';
 
 class MyCategory extends ProductPageShop {
   const MyCategory({

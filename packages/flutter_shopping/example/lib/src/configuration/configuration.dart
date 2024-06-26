@@ -3,10 +3,7 @@ import "package:example/src/routes.dart";
 import "package:example/src/services/order_service.dart";
 import "package:example/src/services/shop_service.dart";
 import "package:flutter/material.dart";
-import "package:flutter_order_details/flutter_order_details.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
 import "package:go_router/go_router.dart";
 
 // (REQUIRED): Create your own instance of the ProductService.

@@ -1,6 +1,6 @@
 import "package:amazon/src/models/my_category.dart";
 import "package:amazon/src/models/my_product.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 Map<String, String> categories = {
   "Electronics": "Electronica",
