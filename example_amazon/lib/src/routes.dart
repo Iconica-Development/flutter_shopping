@@ -15,7 +15,6 @@ final routerProvider = Provider<GoRouter>(
       ...getShoppingStoryRoutes(
         configuration: getFlutterShoppingConfiguration(),
       ),
-
       // Home Route
       GoRoute(
         name: "home",
