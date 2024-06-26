@@ -17,23 +17,13 @@ dependencies:
       url: https://github.com/Iconica-Development/flutter_nested_categories
       ref: 0.0.1
   flutter_product_page:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 1.0.0
-      path: packages/flutter_product_page
+    path: ../../flutter_product_page
   flutter_shopping_cart:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 1.0.0
-      path: packages/flutter_shopping_cart
+    path: ../../flutter_shopping_cart
   flutter_order_details:
-    git:
-      url: https://github.com/Iconica-Development/flutter_order_details
-      ref: 1.0.1
+    path: ../../flutter_order_details
   flutter_shopping:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 1.0.6
+    path: ../../flutter_shopping
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "../../flutter_shopping.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// Default order failed widget.
 class DefaultOrderFailed extends StatelessWidget {

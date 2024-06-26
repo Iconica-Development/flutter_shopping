@@ -22,8 +22,9 @@ dependencies:
       path: packages/flutter_shopping_cart
   flutter_order_details:
     git:
-      url: https://github.com/Iconica-Development/flutter_order_details
-      ref: 1.0.1
+      url: https://github.com/Iconica-Development/flutter_shopping
+      ref: 1.0.0
+      path: packages/flutter_order_details
 
 dev_dependencies:
   flutter_test:
