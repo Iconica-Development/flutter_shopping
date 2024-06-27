@@ -8,6 +8,7 @@ class ShoppingCartLocalizations {
     this.placeOrder = "Order",
     this.sum = "Subtotal:",
     this.cartTitle = "Products",
+    this.close = "close",
   });
 
   /// Locale for the shopping cart.
@@ -26,4 +27,7 @@ class ShoppingCartLocalizations {
   /// Title for the shopping cart. This title will be displayed at the top of
   /// the shopping cart.
   final String cartTitle;
+
+  /// Localization for the close button for the popup.
+  final String close;
 }

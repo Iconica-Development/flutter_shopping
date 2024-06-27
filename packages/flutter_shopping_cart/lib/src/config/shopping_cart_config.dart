@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_shopping_cart/src/widgets/product_item_popup.dart";
 
 Widget _defaultNoContentBuilder(BuildContext context) =>
     const SizedBox.shrink();
@@ -53,6 +54,7 @@ you must use the onConfirmOrder callback.""",
     Locale locale,
     Product product,
     ProductService<Product> productService,
+    ShoppingCartConfig configuration,
   ) productItemBuilder;
 
   final Widget Function(BuildContext context) _noContentBuilder;
@@ -115,6 +117,7 @@ Widget _defaultProductItemBuilder(
   Locale locale,
   Product product,
   ProductService<Product> service,
+  ShoppingCartConfig configuration,
 ) {
   var theme = Theme.of(context);
   return Padding(
@@ -128,9 +131,18 @@ Widget _defaultProductItemBuilder(
             product.name,
             style: theme.textTheme.titleMedium,
           ),
-          Icon(
-            Icons.info_outline,
-            color: theme.colorScheme.primary,
+          IconButton(
+            onPressed: () async {
+              await showModalBottomSheet(
+                context: context,
+                backgroundColor: theme.colorScheme.surface,
+                builder: (context) => ProductItemPopup(product: product, configuration: configuration)
+              );
+            },
+            icon: Icon(
+              Icons.info_outline,
+              color: theme.colorScheme.primary,
+            ),
           ),
         ],
       ),

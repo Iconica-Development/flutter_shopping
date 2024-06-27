@@ -54,6 +54,7 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
                       configuration.localizations.locale,
                       product,
                       configuration.productService,
+                      configuration,
                     ),
                   // Additional whitespace at the bottom to make sure the
                   // last product(s) are not hidden by the bottom sheet.
@@ -216,7 +217,7 @@ class _DefaultSumBottomSheet extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            totalPrice.toStringAsFixed(2),
+            "€ ${totalPrice.toStringAsFixed(2)}",
             style: theme.textTheme.bodyMedium,
           ),
         ],
