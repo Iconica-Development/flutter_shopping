@@ -1,6 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
 /// Product item widget.
@@ -15,14 +15,14 @@ class ProductItem extends StatelessWidget {
   });
 
   /// Product to display.
-  final ProductPageProduct product;
+  final Product product;
 
   /// Function to call when the product detail is requested.
-  final Function(BuildContext context, ProductPageProduct selectedProduct)
+  final Function(BuildContext context, Product selectedProduct)
       onProductDetail;
 
   /// Function to call when the product is added to the cart.
-  final Function(ProductPageProduct selectedProduct) onAddToCart;
+  final Function(Product selectedProduct) onAddToCart;
 
   /// Localizations for the product page.
   final ProductPageLocalization localizations;
@@ -158,8 +158,8 @@ class _AddToCardButton extends StatelessWidget {
     required this.onAddToCart,
   });
 
-  final ProductPageProduct product;
-  final Function(ProductPageProduct product) onAddToCart;
+  final Product product;
+  final Function(Product product) onAddToCart;
 
   static const double boxSize = 29;
 

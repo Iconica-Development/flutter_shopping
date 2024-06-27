@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter_nested_categories/flutter_nested_categories.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_product_page/src/services/shopping_cart_notifier.dart";
 import "package:flutter_product_page/src/ui/components/product_item.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// A function that is called when a product is added to the cart.
-ProductPageProduct onAddToCartWrapper(
+Product onAddToCartWrapper(
   ProductPageConfiguration configuration,
   ShoppingCartNotifier shoppingCartNotifier,
-  ProductPageProduct product,
+  Product product,
 ) {
   shoppingCartNotifier.productsChanged();
 
@@ -23,9 +23,9 @@ CategoryList getCategoryList(
   BuildContext context,
   ProductPageConfiguration configuration,
   ShoppingCartNotifier shoppingCartNotifier,
-  List<ProductPageProduct> products,
+  List<Product> products,
 ) {
-  var categorizedProducts = <String, List<ProductPageProduct>>{};
+  var categorizedProducts = <String, List<Product>>{};
   for (var product in products) {
     if (!categorizedProducts.containsKey(product.category)) {
       categorizedProducts[product.category] = [];
@@ -43,7 +43,7 @@ CategoryList getCategoryList(
               : ProductItem(
                   product: product,
                   onProductDetail: configuration.onProductDetail,
-                  onAddToCart: (ProductPageProduct product) =>
+                  onAddToCart: (Product product) =>
                       onAddToCartWrapper(
                     configuration,
                     shoppingCartNotifier,

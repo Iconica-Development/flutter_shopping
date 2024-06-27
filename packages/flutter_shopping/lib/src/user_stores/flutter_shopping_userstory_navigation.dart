@@ -45,8 +45,8 @@ void onCompleteShoppingCart(
 ///
 /// You can create your own implementation if you decide to use a different
 /// approach.
-void onCompleteProductPage(
+Future<void> onCompleteProductPage(
   BuildContext context,
-) {
-  context.go(FlutterShoppingPathRoutes.shoppingCart);
+) async {
+  await context.push(FlutterShoppingPathRoutes.shoppingCart);
 }

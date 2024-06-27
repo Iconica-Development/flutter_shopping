@@ -5,8 +5,9 @@ class ShoppingCartLocalizations {
   /// Creates shopping cart localizations
   const ShoppingCartLocalizations({
     this.locale = const Locale("en", "US"),
-    this.placeOrder = "PLACE ORDER",
-    this.sum = "Total:",
+    this.placeOrder = "Order",
+    this.sum = "Subtotal:",
+    this.cartTitle = "Products",
   });
 
   /// Locale for the shopping cart.
@@ -21,4 +22,8 @@ class ShoppingCartLocalizations {
 
   /// Localization for the sum.
   final String sum;
+
+  /// Title for the shopping cart. This title will be displayed at the top of
+  /// the shopping cart.
+  final String cartTitle;
 }

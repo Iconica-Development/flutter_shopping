@@ -1,9 +1,8 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// Shopping cart screen widget.
-class ShoppingCartScreen<T extends ShoppingCartProduct>
-    extends StatelessWidget {
+class ShoppingCartScreen<T extends Product> extends StatelessWidget {
   /// Creates a shopping cart screen.
   const ShoppingCartScreen({
     required this.configuration,
@@ -22,12 +21,19 @@ class ShoppingCartScreen<T extends ShoppingCartProduct>
         children: [
           if (configuration.titleBuilder != null) ...{
             configuration.titleBuilder!(context),
-          } else if (configuration.title != null) ...{
+          } else ...{
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Text(
-                configuration.title!,
-                style: theme.textTheme.titleLarge,
+              padding: const EdgeInsets.symmetric(
+                vertical: 32,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    configuration.localizations.cartTitle,
+                    style: theme.textTheme.titleLarge,
+                    textAlign: TextAlign.start,
+                  ),
+                ],
               ),
             ),
           },
@@ -47,6 +53,7 @@ class ShoppingCartScreen<T extends ShoppingCartProduct>
                       context,
                       configuration.localizations.locale,
                       product,
+                      configuration.productService,
                     ),
                   // Additional whitespace at the bottom to make sure the
                   // last product(s) are not hidden by the bottom sheet.
@@ -62,54 +69,36 @@ class ShoppingCartScreen<T extends ShoppingCartProduct>
       ),
     );
 
-    var bottomHeight = configuration.confirmOrderButtonHeight +
-        configuration.sumBottomSheetHeight;
-
-    var bottomBlur = Container(
-      height: bottomHeight,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            theme.colorScheme.surface.withOpacity(0),
-            theme.colorScheme.surface.withOpacity(.5),
-            theme.colorScheme.surface.withOpacity(.8),
-            theme.colorScheme.surface.withOpacity(.8),
-            theme.colorScheme.surface.withOpacity(.8),
-            theme.colorScheme.surface.withOpacity(.8),
-            theme.colorScheme.surface.withOpacity(1),
-          ],
-        ),
-      ),
-    );
-
     return Scaffold(
-      appBar: configuration.appBar,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Padding(
-            padding: configuration.padding,
-            child: productBuilder,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: bottomBlur,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _BottomSheet<T>(
-              configuration: configuration,
+      appBar: configuration.appBar ??
+          AppBar(
+            title: Text(
+              "Shopping cart",
+              style: theme.textTheme.headlineLarge,
             ),
           ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Padding(
+              padding: configuration.padding,
+              child: productBuilder,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: _BottomSheet<T>(
+                configuration: configuration,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _BottomSheet<T extends ShoppingCartProduct> extends StatelessWidget {
+class _BottomSheet<T extends Product> extends StatelessWidget {
   const _BottomSheet({
     required this.configuration,
     super.key,
@@ -145,8 +134,7 @@ class _BottomSheet<T extends ShoppingCartProduct> extends StatelessWidget {
   }
 }
 
-class _DefaultConfirmOrderButton<T extends ShoppingCartProduct>
-    extends StatelessWidget {
+class _DefaultConfirmOrderButton<T extends Product> extends StatelessWidget {
   const _DefaultConfirmOrderButton({
     required this.configuration,
   });
@@ -169,29 +157,35 @@ class _DefaultConfirmOrderButton<T extends ShoppingCartProduct>
       configuration.onConfirmOrder!(products);
     }
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 80),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary,
-          ),
-          onPressed: () => onConfirmOrderPressed(
-            configuration.productService.products,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
-            child: Text(
-              """${configuration.localizations.placeOrder} (${configuration.productService.countProducts()})""",
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onPrimary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 80),
+      child: Row(
+        children: [
+          Expanded(
+            child: FilledButton(
+              style: theme.filledButtonTheme.style?.copyWith(
+                backgroundColor: WidgetStateProperty.all(
+                  theme.colorScheme.primary,
+                ),
+              ),
+              onPressed: () => onConfirmOrderPressed(
+                configuration.productService.products,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 5.0,
+                ),
+                child: Text(
+                  configuration.localizations.placeOrder,
+                  style: theme.textTheme.displayLarge?.copyWith(
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -223,7 +217,7 @@ class _DefaultSumBottomSheet extends StatelessWidget {
           const Spacer(),
           Text(
             totalPrice.toStringAsFixed(2),
-            style: theme.textTheme.titleMedium,
+            style: theme.textTheme.bodyMedium,
           ),
         ],
       ),

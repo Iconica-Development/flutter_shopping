@@ -1,6 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// A widget that displays a weekly discount.
 class WeeklyDiscount extends StatelessWidget {
@@ -15,7 +15,7 @@ class WeeklyDiscount extends StatelessWidget {
   final ProductPageConfiguration configuration;
 
   /// The product for which the discount is displayed.
-  final ProductPageProduct product;
+  final Product product;
 
   /// The top padding of the widget.
   static const double topPadding = 32.0;

@@ -1,47 +1,37 @@
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_product_page/src/ui/widgets/product_item_popup.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// Configuration for the product page.
 class ProductPageConfiguration {
   /// Constructor for the product page configuration.
   ProductPageConfiguration({
     required this.shops,
-    //
     required this.getProducts,
-    //
     required this.onAddToCart,
     required this.onNavigateToShoppingCart,
     this.navigateToShoppingCartBuilder,
-    //
     this.initialShopId,
-    //
     this.productBuilder,
-    //
     this.onShopSelectionChange,
     this.getProductsInShoppingCart,
-    //
     this.localizations = const ProductPageLocalization(),
-    //
     this.shopSelectorStyle = ShopSelectorStyle.spacedWrap,
     this.categoryStylingConfiguration =
         const ProductPageCategoryStylingConfiguration(),
-    //
     this.pagePadding = const EdgeInsets.all(4),
-    //
     this.appBar,
     this.bottomNavigationBar,
-    //
     Function(
       BuildContext context,
-      ProductPageProduct product,
+      Product product,
     )? onProductDetail,
     String Function(
-      ProductPageProduct product,
+      Product product,
     )? getDiscountDescription,
     Widget Function(
       BuildContext context,
-      ProductPageProduct product,
+      Product product,
     )? productPopupBuilder,
     Widget Function(
       BuildContext context,
@@ -54,14 +44,14 @@ class ProductPageConfiguration {
   }) {
     _productPopupBuilder = productPopupBuilder;
     _productPopupBuilder ??=
-        (BuildContext context, ProductPageProduct product) => ProductItemPopup(
+        (BuildContext context, Product product) => ProductItemPopup(
               product: product,
               configuration: this,
             );
 
     _onProductDetail = onProductDetail;
     _onProductDetail ??=
-        (BuildContext context, ProductPageProduct product) async {
+        (BuildContext context, Product product) async {
       var theme = Theme.of(context);
 
       await showModalBottomSheet(
@@ -99,7 +89,7 @@ class ProductPageConfiguration {
 
     _getDiscountDescription = getDiscountDescription;
     _getDiscountDescription ??=
-        (ProductPageProduct product) => "${product.name} is on sale!";
+        (Product product) => "${product.name} is on sale!";
   }
 
   /// The shop that is initially selected.
@@ -119,26 +109,26 @@ class ProductPageConfiguration {
   /// for each product in their seperated category. This builder should only
   /// build the widget for one specific product. This builder has a default
   /// in-case the developer does not override it.
-  Widget Function(BuildContext context, ProductPageProduct product)?
+  Widget Function(BuildContext context, Product product)?
       productBuilder;
 
-  late Widget Function(BuildContext context, ProductPageProduct product)?
+  late Widget Function(BuildContext context, Product product)?
       _productPopupBuilder;
 
   /// The builder for the product popup. This popup will be displayed when the
   /// user clicks on a product. This builder should only build the widget that
   /// displays the content of one specific product.
   /// This builder has a default in-case the developer
-  Widget Function(BuildContext context, ProductPageProduct product)
+  Widget Function(BuildContext context, Product product)
       get productPopupBuilder => _productPopupBuilder!;
 
-  late Function(BuildContext context, ProductPageProduct product)?
+  late Function(BuildContext context, Product product)?
       _onProductDetail;
 
   /// This function handles the creation of the product detail popup. This
   /// function has a default in-case the developer does not override it.
   /// The default intraction is a popup, but this can be overriden.
-  Function(BuildContext context, ProductPageProduct product)
+  Function(BuildContext context, Product product)
       get onProductDetail => _onProductDetail!;
 
   late Widget Function(BuildContext context)? _noContentBuilder;
@@ -162,16 +152,16 @@ class ProductPageConfiguration {
   Widget Function(BuildContext context, Object? error, StackTrace? stackTrace)?
       get errorBuilder => _errorBuilder;
 
-  late String Function(ProductPageProduct product)? _getDiscountDescription;
+  late String Function(Product product)? _getDiscountDescription;
 
   /// The function that returns the description of the discount for a product.
   /// This allows you to translate and give custom messages for each product.
-  String Function(ProductPageProduct product)? get getDiscountDescription =>
+  String Function(Product product)? get getDiscountDescription =>
       _getDiscountDescription!;
 
   /// This function must be implemented by the developer and should handle the
   /// adding of a product to the cart.
-  Function(ProductPageProduct product) onAddToCart;
+  Function(Product product) onAddToCart;
 
   /// This function gets executed when the user changes the shop selection.
   /// This function always fires upon first load with the initial shop as well.

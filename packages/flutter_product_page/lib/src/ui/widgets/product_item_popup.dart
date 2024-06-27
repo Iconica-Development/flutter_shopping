@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// A popup that displays the product item.
 class ProductItemPopup extends StatelessWidget {
@@ -11,7 +11,7 @@ class ProductItemPopup extends StatelessWidget {
   });
 
   /// The product to display.
-  final ProductPageProduct product;
+  final Product product;
 
   /// Configuration for the product page.
   final ProductPageConfiguration configuration;

@@ -1,4 +1,4 @@
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// Return type that contains the products and an optional discounted product.
 class ProductPageContent {
@@ -9,8 +9,8 @@ class ProductPageContent {
   });
 
   /// List of products that belong to the shop.
-  final List<ProductPageProduct> products;
+  final List<Product> products;
 
   /// Optional highlighted discounted product to display.
-  final ProductPageProduct? discountedProduct;
+  final Product? discountedProduct;
 }
