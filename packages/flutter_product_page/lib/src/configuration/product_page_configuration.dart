@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_product_page/src/services/shopping_cart_notifier.dart";
 import "package:flutter_product_page/src/ui/widgets/product_item_popup.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
 
@@ -10,7 +11,7 @@ class ProductPageConfiguration {
     required this.getProducts,
     required this.onAddToCart,
     required this.onNavigateToShoppingCart,
-    this.navigateToShoppingCartBuilder,
+    this.navigateToShoppingCartBuilder = _defaultNavigateToShoppingCartBuilder,
     this.initialShopId,
     this.productBuilder,
     this.onShopSelectionChange,
@@ -20,7 +21,7 @@ class ProductPageConfiguration {
     this.categoryStylingConfiguration =
         const ProductPageCategoryStylingConfiguration(),
     this.pagePadding = const EdgeInsets.all(4),
-    this.appBar,
+    this.appBar = _defaultAppBar,
     this.bottomNavigationBar,
     Function(
       BuildContext context,
@@ -50,8 +51,7 @@ class ProductPageConfiguration {
             );
 
     _onProductDetail = onProductDetail;
-    _onProductDetail ??=
-        (BuildContext context, Product product) async {
+    _onProductDetail ??= (BuildContext context, Product product) async {
       var theme = Theme.of(context);
 
       await showModalBottomSheet(
@@ -88,8 +88,8 @@ class ProductPageConfiguration {
     };
 
     _getDiscountDescription = getDiscountDescription;
-    _getDiscountDescription ??=
-        (Product product) => "${product.name} is on sale!";
+    _getDiscountDescription ??= (Product product) =>
+        "${product.name}, now for ${product.discountPrice} each";
   }
 
   /// The shop that is initially selected.
@@ -109,8 +109,7 @@ class ProductPageConfiguration {
   /// for each product in their seperated category. This builder should only
   /// build the widget for one specific product. This builder has a default
   /// in-case the developer does not override it.
-  Widget Function(BuildContext context, Product product)?
-      productBuilder;
+  Widget Function(BuildContext context, Product product)? productBuilder;
 
   late Widget Function(BuildContext context, Product product)?
       _productPopupBuilder;
@@ -122,14 +121,13 @@ class ProductPageConfiguration {
   Widget Function(BuildContext context, Product product)
       get productPopupBuilder => _productPopupBuilder!;
 
-  late Function(BuildContext context, Product product)?
-      _onProductDetail;
+  late Function(BuildContext context, Product product)? _onProductDetail;
 
   /// This function handles the creation of the product detail popup. This
   /// function has a default in-case the developer does not override it.
   /// The default intraction is a popup, but this can be overriden.
-  Function(BuildContext context, Product product)
-      get onProductDetail => _onProductDetail!;
+  Function(BuildContext context, Product product) get onProductDetail =>
+      _onProductDetail!;
 
   late Widget Function(BuildContext context)? _noContentBuilder;
 
@@ -139,7 +137,11 @@ class ProductPageConfiguration {
 
   /// The builder for the shopping cart. This builder should return a widget
   /// that navigates to the shopping cart overview page.
-  Widget Function(BuildContext context)? navigateToShoppingCartBuilder;
+  Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    ShoppingCartNotifier notifier,
+  ) navigateToShoppingCartBuilder;
 
   late Widget Function(
     BuildContext context,
@@ -188,5 +190,54 @@ class ProductPageConfiguration {
   final Widget? bottomNavigationBar;
 
   /// Optional app bar that you can pass to the order detail screen.
-  final PreferredSizeWidget? appBar;
+  final AppBar Function(BuildContext context)? appBar;
+}
+
+AppBar _defaultAppBar(
+  BuildContext context,
+) {
+  var theme = Theme.of(context);
+
+  return AppBar(
+    leading: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
+    actions: [
+      IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt)),
+    ],
+    title: Text(
+      "Product page",
+      style: theme.textTheme.headlineLarge,
+    ),
+  );
+}
+
+Widget _defaultNavigateToShoppingCartBuilder(
+  BuildContext context,
+  ProductPageConfiguration configuration,
+  ShoppingCartNotifier notifier,
+) {
+  var theme = Theme.of(context);
+
+  return ListenableBuilder(
+    listenable: notifier,
+    builder: (context, widget) => FilledButton(
+      onPressed: configuration.getProductsInShoppingCart?.call() != 0
+          ? configuration.onNavigateToShoppingCart
+          : null,
+      style: theme.filledButtonTheme.style?.copyWith(
+        backgroundColor: WidgetStateProperty.all(
+          theme.colorScheme.primary,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
+        child: Text(
+          configuration.localizations.navigateToShoppingCart,
+          style: theme.textTheme.displayLarge,
+        ),
+      ),
+    ),
+  );
 }

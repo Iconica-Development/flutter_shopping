@@ -18,8 +18,7 @@ class ProductItem extends StatelessWidget {
   final Product product;
 
   /// Function to call when the product detail is requested.
-  final Function(BuildContext context, Product selectedProduct)
-      onProductDetail;
+  final Function(BuildContext context, Product selectedProduct) onProductDetail;
 
   /// Function to call when the product is added to the cart.
   final Function(Product selectedProduct) onAddToCart;
@@ -76,7 +75,10 @@ class ProductItem extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4),
       child: IconButton(
         onPressed: () => onProductDetail(context, product),
-        icon: const Icon(Icons.info_outline),
+        icon: Icon(
+          Icons.info_outline,
+          color: theme.colorScheme.primary,
+        ),
       ),
     );
 
@@ -84,10 +86,7 @@ class ProductItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _PriceLabel(
-          price: product.price,
-          discountPrice: (product.hasDiscount && product.discountPrice != null)
-              ? product.discountPrice
-              : null,
+          product: product,
         ),
         _AddToCardButton(
           product: product,
@@ -113,42 +112,36 @@ class ProductItem extends StatelessWidget {
 
 class _PriceLabel extends StatelessWidget {
   const _PriceLabel({
-    required this.price,
-    required this.discountPrice,
+    required this.product,
   });
 
-  final double price;
-  final double? discountPrice;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    if (discountPrice == null)
-      return Text(
-        price.toStringAsFixed(2),
-        style: theme.textTheme.bodyMedium,
-      );
-    else
-      return Row(
-        children: [
+    return Row(
+      children: [
+        if (product.hasDiscount) ...[
           Text(
-            price.toStringAsFixed(2),
+            product.price.toStringAsFixed(2),
             style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 10,
-              color: theme.colorScheme.primary,
               decoration: TextDecoration.lineThrough,
             ),
+            textAlign: TextAlign.center,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 4.0),
-            child: Text(
-              discountPrice!.toStringAsFixed(2),
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          const SizedBox(width: 4),
         ],
-      );
+        Text(
+          product.hasDiscount
+              ? product.discountPrice!.toStringAsFixed(2)
+              : product.price.toStringAsFixed(2),
+          style: theme.textTheme.bodySmall,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 }
 
@@ -166,28 +159,22 @@ class _AddToCardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(4),
+      ),
       width: boxSize,
       height: boxSize,
       child: Center(
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: Icon(
+          icon: const Icon(
             Icons.add,
-            color: theme.primaryColor,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => onAddToCart(product),
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-              theme.colorScheme.secondary,
-            ),
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
         ),
       ),
     );

@@ -9,7 +9,7 @@ class HorizontalListItems extends StatelessWidget {
     required this.selectedItem,
     required this.onTap,
     this.paddingBetweenButtons = 2.0,
-    this.paddingOnButtons = 4,
+    this.paddingOnButtons = 6,
     super.key,
   });
 
@@ -32,41 +32,46 @@ class HorizontalListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: shops
-            .map(
-              (shop) => Padding(
-                padding: EdgeInsets.only(right: paddingBetweenButtons),
-                child: InkWell(
-                  onTap: () => onTap(shop),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: shop.id == selectedItem
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: theme.colorScheme.primary,
-                        width: 1,
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 4,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: shops
+              .map(
+                (shop) => Padding(
+                  padding: EdgeInsets.only(right: paddingBetweenButtons),
+                  child: InkWell(
+                    onTap: () => onTap(shop),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: shop.id == selectedItem
+                            ? theme.colorScheme.primary
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: theme.colorScheme.primary,
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.all(paddingOnButtons),
-                    child: Text(
-                      shop.name,
-                      style: shop.id == selectedItem
-                          ? theme.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            )
-                          : theme.textTheme.bodyMedium,
+                      padding: EdgeInsets.all(paddingOnButtons),
+                      child: Text(
+                        shop.name,
+                        style: shop.id == selectedItem
+                            ? theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              )
+                            : theme.textTheme.bodyMedium,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-            .toList(),
+              )
+              .toList(),
+        ),
       ),
     );
   }

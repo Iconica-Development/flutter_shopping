@@ -18,7 +18,7 @@ class WeeklyDiscount extends StatelessWidget {
   final Product product;
 
   /// The top padding of the widget.
-  static const double topPadding = 32.0;
+  static const double topPadding = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,7 @@ class WeeklyDiscount extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Text(
         configuration.getDiscountDescription!(product),
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
+        style: theme.textTheme.bodyMedium,
         textAlign: TextAlign.left,
       ),
     );
@@ -73,9 +71,9 @@ class WeeklyDiscount extends StatelessWidget {
     );
 
     var topText = DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.primaryColor,
-        borderRadius: const BorderRadius.only(
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(4),
           topRight: Radius.circular(4),
         ),
@@ -88,10 +86,8 @@ class WeeklyDiscount extends StatelessWidget {
             horizontal: 16,
           ),
           child: Text(
-            configuration.localizations.discountTitle.toUpperCase(),
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onPrimary,
-            ),
+            configuration.localizations.discountTitle,
+            style: theme.textTheme.headlineSmall,
             textAlign: TextAlign.left,
           ),
         ),
@@ -100,7 +96,6 @@ class WeeklyDiscount extends StatelessWidget {
 
     var boxDecoration = BoxDecoration(
       border: Border.all(
-        color: theme.primaryColor,
         width: 1.0,
       ),
       borderRadius: BorderRadius.circular(4.0),

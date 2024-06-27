@@ -19,12 +19,13 @@ Product onAddToCartWrapper(
 
 /// Generates a [CategoryList] from a list of [Product]s and a
 /// [ProductPageConfiguration].
-CategoryList getCategoryList(
+Widget getCategoryList(
   BuildContext context,
   ProductPageConfiguration configuration,
   ShoppingCartNotifier shoppingCartNotifier,
   List<Product> products,
 ) {
+  var theme = Theme.of(context);
   var categorizedProducts = <String, List<Product>>{};
   for (var product in products) {
     if (!categorizedProducts.containsKey(product.category)) {
@@ -43,8 +44,7 @@ CategoryList getCategoryList(
               : ProductItem(
                   product: product,
                   onProductDetail: configuration.onProductDetail,
-                  onAddToCart: (Product product) =>
-                      onAddToCartWrapper(
+                  onAddToCart: (Product product) => onAddToCartWrapper(
                     configuration,
                     shoppingCartNotifier,
                     product,
@@ -59,15 +59,19 @@ CategoryList getCategoryList(
     );
     categories.add(category);
   });
-
-  return CategoryList(
-    title: configuration.categoryStylingConfiguration.title,
-    titleStyle: configuration.categoryStylingConfiguration.titleStyle,
-    customTitle: configuration.categoryStylingConfiguration.customTitle,
-    headerCentered: configuration.categoryStylingConfiguration.headerCentered,
-    headerStyling: configuration.categoryStylingConfiguration.headerStyling,
-    isCategoryCollapsible:
-        configuration.categoryStylingConfiguration.isCategoryCollapsible,
-    content: categories,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (var category in categories) ...[
+        Text(
+          category.name!,
+          style: theme.textTheme.titleMedium,
+        ),
+        Column(
+          children: category.content,
+        ),
+        const SizedBox(height: 16),
+      ],
+    ],
   );
 }

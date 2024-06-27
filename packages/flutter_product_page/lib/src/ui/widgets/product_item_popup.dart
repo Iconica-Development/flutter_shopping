@@ -20,48 +20,44 @@ class ProductItemPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    var productDescription = Padding(
-      padding: const EdgeInsets.fromLTRB(44, 32, 44, 20),
-      child: Text(
-        product.name,
-        textAlign: TextAlign.center,
-      ),
-    );
-
-    var closeButton = Padding(
-      padding: const EdgeInsets.fromLTRB(80, 0, 80, 32),
-      child: SizedBox(
-        width: 254,
-        child: ElevatedButton(
-          style: theme.elevatedButtonTheme.style?.copyWith(
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ),
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Text(
-              configuration.localizations.close,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
     return SingleChildScrollView(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            productDescription,
-            closeButton,
-          ],
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Text(
+                product.description,
+                style: theme.textTheme.bodySmall,
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 40, right: 40),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: theme.filledButtonTheme.style?.copyWith(
+                      backgroundColor: WidgetStateProperty.all(
+                        theme.colorScheme.primary,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 8.0,
+                      ),
+                      child: Text(
+                        configuration.localizations.close,
+                        style: theme.textTheme.displayLarge,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

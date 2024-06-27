@@ -8,7 +8,8 @@ class Product {
     required this.imageUrl,
     required this.category,
     required this.price,
-    required this.hasDiscount,
+    required this.description,
+    this.hasDiscount = false,
     this.discountPrice,
     this.quantity = 1,
   });
@@ -36,4 +37,7 @@ class Product {
 
   /// Quantity for the product.
   int quantity;
+
+  /// The description of the product.
+  final String description;
 }
