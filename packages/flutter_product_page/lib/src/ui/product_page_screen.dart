@@ -24,13 +24,13 @@ class ProductPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        appBar: configuration.appBar!.call(context),
         body: SafeArea(
           child: ProductPage(
             configuration: configuration,
             initialBuildShopId: initialBuildShopId,
           ),
         ),
-        appBar: configuration.appBar,
         bottomNavigationBar: configuration.bottomNavigationBar,
       );
 }

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_shopping_cart/src/widgets/product_item_popup.dart";
 
 Widget _defaultNoContentBuilder(BuildContext context) =>
     const SizedBox.shrink();
@@ -7,30 +8,21 @@ Widget _defaultNoContentBuilder(BuildContext context) =>
 /// Shopping cart configuration
 ///
 /// This class is used to configure the shopping cart.
-class ShoppingCartConfig<T extends ShoppingCartProduct> {
+class ShoppingCartConfig<T extends Product> {
   /// Creates a shopping cart configuration.
   ShoppingCartConfig({
     required this.productService,
-    //
+    this.productItemBuilder = _defaultProductItemBuilder,
     this.onConfirmOrder,
     this.confirmOrderButtonBuilder,
     this.confirmOrderButtonHeight = 100,
-    //
     this.sumBottomSheetBuilder,
     this.sumBottomSheetHeight = 100,
-    //
-    this.title,
     this.titleBuilder,
-    //
     this.localizations = const ShoppingCartLocalizations(),
-    //
     this.padding = const EdgeInsets.symmetric(horizontal: 32),
     this.bottomPadding = const EdgeInsets.fromLTRB(44, 0, 44, 32),
-    //
     this.appBar,
-    //
-    Widget Function(BuildContext context, Locale locale, T product)?
-        productItemBuilder,
     Widget Function(BuildContext context) noContentBuilder =
         _defaultNoContentBuilder,
   })  : assert(
@@ -45,17 +37,7 @@ you cannot use the onConfirmOrder callback.""",
 If you do not override the confirm order button builder,
 you must use the onConfirmOrder callback.""",
         ),
-        _noContentBuilder = noContentBuilder {
-    _productItemBuilder = productItemBuilder;
-    _productItemBuilder ??= (context, locale, product) => ListTile(
-          title: Text(product.name),
-          subtitle: Text(product.price.toString()),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () => productService.removeProduct(product),
-          ),
-        );
-  }
+        _noContentBuilder = noContentBuilder;
 
   /// Product Service. The service contains all the products that
   /// a shopping cart can contain. Each product must extend the [Product] class.
@@ -65,13 +47,15 @@ you must use the onConfirmOrder callback.""",
   /// support seperate shopping carts for shop.
   ProductService<T> productService = ProductService<T>(<T>[]);
 
-  late final Widget Function(BuildContext context, Locale locale, T product)?
-      _productItemBuilder;
-
   /// Product item builder. This builder is used to build the product item
   /// that will be displayed in the shopping cart.
-  Widget Function(BuildContext context, Locale locale, T product)
-      get productItemBuilder => _productItemBuilder!;
+  final Widget Function(
+    BuildContext context,
+    Locale locale,
+    Product product,
+    ProductService<Product> productService,
+    ShoppingCartConfig configuration,
+  ) productItemBuilder;
 
   final Widget Function(BuildContext context) _noContentBuilder;
 
@@ -115,10 +99,6 @@ you must use the onConfirmOrder callback.""",
   /// [sumBottomSheetBuilder] is overridden.
   final EdgeInsets bottomPadding;
 
-  /// Title of the shopping cart. The title is displayed at the top of the
-  /// shopping cart. If you provide a title builder, the title will be ignored.
-  final String? title;
-
   /// Title builder. This builder is used to build the title of the shopping
   /// cart. The title is displayed at the top of the shopping cart. If you
   /// use the title builder, the [title] will be ignored.
@@ -130,4 +110,100 @@ you must use the onConfirmOrder callback.""",
 
   /// App bar for the shopping cart screen.
   final PreferredSizeWidget? appBar;
+}
+
+Widget _defaultProductItemBuilder(
+  BuildContext context,
+  Locale locale,
+  Product product,
+  ProductService<Product> service,
+  ShoppingCartConfig configuration,
+) {
+  var theme = Theme.of(context);
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 20),
+    child: ListTile(
+      contentPadding: const EdgeInsets.only(top: 3, left: 4, bottom: 3),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            product.name,
+            style: theme.textTheme.titleMedium,
+          ),
+          IconButton(
+            onPressed: () async {
+              await showModalBottomSheet(
+                context: context,
+                backgroundColor: theme.colorScheme.surface,
+                builder: (context) => ProductItemPopup(
+                  product: product,
+                  configuration: configuration,
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.info_outline,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(6),
+        child: Image.network(
+          product.imageUrl,
+        ),
+      ),
+      trailing: Column(
+        children: [
+          Text(
+            product.price.toStringAsFixed(2),
+            style: theme.textTheme.labelSmall,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.remove,
+                  color: Colors.black,
+                ),
+                onPressed: () => service.removeOneProduct(product),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  height: 30,
+                  width: 30,
+                  child: Text(
+                    "${product.quantity}",
+                    style: theme.textTheme.titleSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              IconButton(
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
+                onPressed: () => service.addProduct(product),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }

@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter_nested_categories/flutter_nested_categories.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_product_page/src/services/shopping_cart_notifier.dart";
 import "package:flutter_product_page/src/ui/components/product_item.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// A function that is called when a product is added to the cart.
-ProductPageProduct onAddToCartWrapper(
+Product onAddToCartWrapper(
   ProductPageConfiguration configuration,
   ShoppingCartNotifier shoppingCartNotifier,
-  ProductPageProduct product,
+  Product product,
 ) {
   shoppingCartNotifier.productsChanged();
 
@@ -19,13 +19,14 @@ ProductPageProduct onAddToCartWrapper(
 
 /// Generates a [CategoryList] from a list of [Product]s and a
 /// [ProductPageConfiguration].
-CategoryList getCategoryList(
+Widget getCategoryList(
   BuildContext context,
   ProductPageConfiguration configuration,
   ShoppingCartNotifier shoppingCartNotifier,
-  List<ProductPageProduct> products,
+  List<Product> products,
 ) {
-  var categorizedProducts = <String, List<ProductPageProduct>>{};
+  var theme = Theme.of(context);
+  var categorizedProducts = <String, List<Product>>{};
   for (var product in products) {
     if (!categorizedProducts.containsKey(product.category)) {
       categorizedProducts[product.category] = [];
@@ -43,8 +44,7 @@ CategoryList getCategoryList(
               : ProductItem(
                   product: product,
                   onProductDetail: configuration.onProductDetail,
-                  onAddToCart: (ProductPageProduct product) =>
-                      onAddToCartWrapper(
+                  onAddToCart: (Product product) => onAddToCartWrapper(
                     configuration,
                     shoppingCartNotifier,
                     product,
@@ -59,15 +59,19 @@ CategoryList getCategoryList(
     );
     categories.add(category);
   });
-
-  return CategoryList(
-    title: configuration.categoryStylingConfiguration.title,
-    titleStyle: configuration.categoryStylingConfiguration.titleStyle,
-    customTitle: configuration.categoryStylingConfiguration.customTitle,
-    headerCentered: configuration.categoryStylingConfiguration.headerCentered,
-    headerStyling: configuration.categoryStylingConfiguration.headerStyling,
-    isCategoryCollapsible:
-        configuration.categoryStylingConfiguration.isCategoryCollapsible,
-    content: categories,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (var category in categories) ...[
+        Text(
+          category.name!,
+          style: theme.textTheme.titleMedium,
+        ),
+        Column(
+          children: category.content,
+        ),
+        const SizedBox(height: 16),
+      ],
+    ],
   );
 }

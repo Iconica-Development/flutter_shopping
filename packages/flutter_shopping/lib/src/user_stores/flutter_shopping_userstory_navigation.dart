@@ -35,18 +35,18 @@ Future<void> onCompleteOrderDetails(
 ///
 /// You can create your own implementation if you decide to use a different
 /// approach.
-void onCompleteShoppingCart(
+Future<void> onCompleteShoppingCart(
   BuildContext context,
-) {
-  context.go(FlutterShoppingPathRoutes.orderDetails);
+) async {
+  await context.push(FlutterShoppingPathRoutes.orderDetails);
 }
 
 /// Default on complete product page function.
 ///
 /// You can create your own implementation if you decide to use a different
 /// approach.
-void onCompleteProductPage(
+Future<void> onCompleteProductPage(
   BuildContext context,
-) {
-  context.go(FlutterShoppingPathRoutes.shoppingCart);
+) async {
+  await context.push(FlutterShoppingPathRoutes.shoppingCart);
 }

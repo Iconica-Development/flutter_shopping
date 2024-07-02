@@ -1,4 +1,3 @@
-import "package:amazon/src/models/my_product.dart";
 import "package:amazon/src/routes.dart";
 import "package:amazon/src/services/category_service.dart";
 import "package:flutter/material.dart";
@@ -6,7 +5,7 @@ import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 
 // (REQUIRED): Create your own instance of the ProductService.
-final ProductService<MyProduct> productService = ProductService([]);
+final ProductService<Product> productService = ProductService([]);
 
 FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
     FlutterShoppingConfiguration(
@@ -27,8 +26,9 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
             pagePadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
 
             // (REQUIRED): Function to add a product to the cart
-            onAddToCart: (ProductPageProduct product) =>
-                productService.addProduct(product as MyProduct),
+            onAddToCart: (product) {
+              return productService.addProduct(product);
+            },
 
             // (REQUIRED): Function to get the products for a shop
             getProducts: (ProductPageShop shop) =>
@@ -41,7 +41,9 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
 
             shopSelectorStyle: ShopSelectorStyle.row,
 
-            navigateToShoppingCartBuilder: (context) => const SizedBox.shrink(),
+            navigateToShoppingCartBuilder: (context, productpageinfo, shop) {
+              return const SizedBox.shrink();
+            },
 
             bottomNavigationBar: BottomNavigationBar(
               fixedColor: theme.primaryColor,
@@ -164,7 +166,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
                             const SizedBox(height: 12),
                             FilledButton(
                               onPressed: () {
-                                productService.addProduct(product as MyProduct);
+                                productService.addProduct(product);
                               },
                               child: const Text("In winkelwagen"),
                             ),
@@ -206,7 +208,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
             ),
 
             // (OPTIONAL) Appbar
-            appBar: AppBar(
+            appBar: (context) => AppBar(
               title: const SizedBox(
                 height: 40,
                 child: SearchBar(
@@ -262,7 +264,8 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           productService: productService,
 
           // (REQUIRED) product item builder:
-          productItemBuilder: (context, locale, product) => ListTile(
+          productItemBuilder: (context, locale, product, service, config) =>
+              ListTile(
             title: Text(product.name),
             subtitle: Text(product.price.toStringAsFixed(2)),
             leading: Image.network(

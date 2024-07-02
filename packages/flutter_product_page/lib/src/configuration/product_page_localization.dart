@@ -2,8 +2,8 @@
 class ProductPageLocalization {
   /// Default constructor
   const ProductPageLocalization({
-    this.navigateToShoppingCart = "To shopping cart",
-    this.discountTitle = "Discount",
+    this.navigateToShoppingCart = "View shopping cart",
+    this.discountTitle = "Weekly offer",
     this.failedToLoadImageExplenation = "Failed to load image",
     this.close = "Close",
   });

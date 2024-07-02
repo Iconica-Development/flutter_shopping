@@ -121,6 +121,7 @@ class _ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var pageContent = SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ShopSelector(
             configuration: configuration,
@@ -142,63 +143,13 @@ class _ProductPage extends StatelessWidget {
         pageContent,
         Align(
           alignment: Alignment.bottomCenter,
-          child: configuration.navigateToShoppingCartBuilder != null
-              ? configuration.navigateToShoppingCartBuilder!(context)
-              : _NavigateToShoppingCartButton(
-                  configuration: configuration,
-                  shoppingCartNotifier: shoppingCartNotifier,
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class _NavigateToShoppingCartButton extends StatelessWidget {
-  const _NavigateToShoppingCartButton({
-    required this.configuration,
-    required this.shoppingCartNotifier,
-  });
-
-  final ProductPageConfiguration configuration;
-  final ShoppingCartNotifier shoppingCartNotifier;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    String getProductsInShoppingCartLabel() {
-      var fun = configuration.getProductsInShoppingCart;
-
-      if (fun == null) {
-        return "";
-      }
-
-      return "(${fun()})";
-    }
-
-    return FilledButton(
-      onPressed: configuration.onNavigateToShoppingCart,
-      style: theme.filledButtonTheme.style?.copyWith(
-        backgroundColor: WidgetStateProperty.all(
-          theme.colorScheme.primary,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 8.0,
-        ),
-        child: ListenableBuilder(
-          listenable: shoppingCartNotifier,
-          builder: (BuildContext context, Widget? _) => Text(
-            """${configuration.localizations.navigateToShoppingCart.toUpperCase()} ${getProductsInShoppingCartLabel()}""",
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onPrimary,
-            ),
+          child: configuration.navigateToShoppingCartBuilder(
+            context,
+            configuration,
+            shoppingCartNotifier,
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -215,74 +166,87 @@ class _ShopContents extends StatelessWidget {
   final ShoppingCartNotifier shoppingCartNotifier;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: configuration.pagePadding.horizontal,
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: configuration.pagePadding.horizontal,
+      ),
+      child: FutureBuilder(
+        // ignore: discarded_futures
+        future: configuration.getProducts(
+          selectedShopService.selectedShop!,
         ),
-        child: FutureBuilder(
-          // ignore: discarded_futures
-          future: configuration.getProducts(
-            selectedShopService.selectedShop!,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Align(
-                alignment: Alignment.center,
-                child: CircularProgressIndicator.adaptive(),
-              );
-            }
-
-            if (snapshot.hasError) {
-              return configuration.errorBuilder!(
-                context,
-                snapshot.error,
-                snapshot.stackTrace,
-              );
-            }
-
-            var productPageContent = snapshot.data;
-
-            if (productPageContent == null ||
-                productPageContent.products.isEmpty) {
-              return configuration.noContentBuilder!(context);
-            }
-
-            var productList = Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-              child: Column(
-                children: [
-                  // Products
-                  getCategoryList(
-                    context,
-                    configuration,
-                    shoppingCartNotifier,
-                    productPageContent.products,
-                  ),
-
-                  // Bottom padding so the last product is not cut off
-                  // by the to shopping cart button.
-                  const SizedBox(height: 48),
-                ],
-              ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator.adaptive(),
             );
+          }
 
-            return Column(
+          if (snapshot.hasError) {
+            return configuration.errorBuilder!(
+              context,
+              snapshot.error,
+              snapshot.stackTrace,
+            );
+          }
+
+          var productPageContent = snapshot.data;
+
+          if (productPageContent == null ||
+              productPageContent.products.isEmpty) {
+            return configuration.noContentBuilder!(context);
+          }
+
+          var productList = Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: Column(
               children: [
-                // Discounted product
-                if (productPageContent.discountedProduct != null) ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: WeeklyDiscount(
-                      configuration: configuration,
-                      product: productPageContent.discountedProduct!,
-                    ),
-                  ),
-                ],
+                // Products
+                getCategoryList(
+                  context,
+                  configuration,
+                  shoppingCartNotifier,
+                  productPageContent.products,
+                ),
 
-                productList,
+                // Bottom padding so the last product is not cut off
+                // by the to shopping cart button.
+                const SizedBox(height: 48),
               ],
-            );
-          },
-        ),
-      );
+            ),
+          );
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Discounted product
+              if (productPageContent.discountedProduct != null) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: WeeklyDiscount(
+                    configuration: configuration,
+                    product: productPageContent.discountedProduct!,
+                  ),
+                ),
+              ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                child: Text(
+                  "What would you like to order?",
+                  style: theme.textTheme.titleLarge,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+
+              productList,
+            ],
+          );
+        },
+      ),
+    );
+  }
 }

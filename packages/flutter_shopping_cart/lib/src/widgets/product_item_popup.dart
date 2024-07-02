@@ -14,7 +14,7 @@ class ProductItemPopup extends StatelessWidget {
   final Product product;
 
   /// Configuration for the product page.
-  final ProductPageConfiguration configuration;
+  final ShoppingCartConfig configuration;
 
   @override
   Widget build(BuildContext context) {

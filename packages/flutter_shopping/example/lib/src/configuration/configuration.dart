@@ -1,4 +1,3 @@
-import "package:example/src/models/my_product.dart";
 import "package:example/src/routes.dart";
 import "package:example/src/services/order_service.dart";
 import "package:example/src/services/shop_service.dart";
@@ -7,7 +6,7 @@ import "package:flutter_shopping/flutter_shopping.dart";
 import "package:go_router/go_router.dart";
 
 // (REQUIRED): Create your own instance of the ProductService.
-final ProductService<MyProduct> productService = ProductService([]);
+final ProductService<Product> productService = ProductService([]);
 
 FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
     FlutterShoppingConfiguration(
@@ -24,8 +23,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           shops: Future.value(getShops()),
 
           // (REQUIRED): Function to add a product to the cart
-          onAddToCart: (ProductPageProduct product) =>
-              productService.addProduct(product as MyProduct),
+          onAddToCart: productService.addProduct,
 
           // (REQUIRED): Function to get the products for a shop
           getProducts: (ProductPageShop shop) =>
@@ -34,7 +32,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           ),
 
           // (REQUIRED): Function to navigate to the shopping cart
-          onNavigateToShoppingCart: () => onCompleteProductPage(context),
+          onNavigateToShoppingCart: () async => onCompleteProductPage(context),
 
           // (RECOMMENDED): Function to get the number of products in the
           // shopping cart. This is used to display the number of products
@@ -43,7 +41,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
 
           // (RECOMMENDED) Function that returns the description for a
           // product that is on sale.
-          getDiscountDescription: (ProductPageProduct product) =>
+          getDiscountDescription: (product) =>
               """${product.name} for just \$${product.discountPrice?.toStringAsFixed(2)}""",
 
           // (RECOMMENDED) Function that is fired when the shop selection
@@ -60,7 +58,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           localizations: const ProductPageLocalization(),
 
           // (OPTIONAL) Appbar
-          appBar: AppBar(
+          appBar: (context) => AppBar(
             title: const Text("Shop"),
             leading: IconButton(
               icon: const Icon(
@@ -85,7 +83,8 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           productService: productService,
 
           // (REQUIRED) product item builder:
-          productItemBuilder: (context, locale, product) => ListTile(
+          productItemBuilder: (context, locale, product, service, config) =>
+              ListTile(
             title: Text(product.name),
             subtitle: Text(product.price.toStringAsFixed(2)),
             leading: Image.network(
@@ -116,13 +115,10 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
 
           // (OPTIONAL/REQUIRED) on confirm order callback:
           // Either use this callback or the placeOrderButtonBuilder.
-          onConfirmOrder: (products) => onCompleteShoppingCart(context),
+          onConfirmOrder: (products) async => onCompleteShoppingCart(context),
 
           // (RECOMMENDED) localizations:
           localizations: const ShoppingCartLocalizations(),
-
-          // (OPTIONAL) title above product list:
-          title: "Products",
 
           /// (OPTIONAL) no content builder for when there are no products
           /// in the shopping cart.

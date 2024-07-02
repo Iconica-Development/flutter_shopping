@@ -33,118 +33,44 @@ class SpacedWrap extends StatelessWidget {
   /// Callback when an item is tapped.
   final Function(ProductPageShop shop) onTap;
 
-  Row _buildRow(
-    BuildContext context,
-    List<int> currentRow,
-    double availableRowLength,
-  ) {
+  @override
+  Widget build(BuildContext context) {
     var theme = Theme.of(context);
-
-    var row = <Widget>[];
-    var extraButtonPadding = availableRowLength / currentRow.length / 2;
-
-    for (var i = 0, len = currentRow.length; i < len; i++) {
-      var shop = shops[currentRow[i]];
-      row.add(
-        Padding(
-          padding: EdgeInsets.only(top: paddingBetweenButtons),
-          child: InkWell(
-            onTap: () => onTap(shop),
-            child: Container(
-              decoration: BoxDecoration(
-                color: shop.id == selectedItem
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.secondary,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
-                  color: theme.colorScheme.primary,
-                  width: 1,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 4,
+      children: [
+        for (var shop in shops) ...[
+          Padding(
+            padding: EdgeInsets.only(top: paddingBetweenButtons),
+            child: InkWell(
+              onTap: () => onTap(shop),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: shop.id == selectedItem
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 1,
+                  ),
                 ),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: paddingOnButtons + extraButtonPadding,
-                vertical: paddingOnButtons,
-              ),
-              child: Text(
-                shop.name,
-                style: shop.id == selectedItem
-                    ? theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      )
-                    : theme.textTheme.bodyMedium,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    shop.name,
+                    style: shop.id == selectedItem
+                        ? theme.textTheme.titleMedium
+                            ?.copyWith(color: Colors.white)
+                        : theme.textTheme.bodyMedium,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      );
-      if (shops.last != shop) {
-        row.add(const Spacer());
-      }
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: row,
+        ],
+      ],
     );
   }
-
-  List<Row> _buildButtonRows(BuildContext context) {
-    var theme = Theme.of(context);
-    var rows = <Row>[];
-    var currentRow = <int>[];
-    var availableRowLength = width;
-
-    for (var i = 0; i < shops.length; i++) {
-      var shop = shops[i];
-
-      var textPainter = TextPainter(
-        text: TextSpan(
-          text: shop.name,
-          style: shop.id == selectedItem
-              ? theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                )
-              : theme.textTheme.bodyMedium,
-        ),
-        maxLines: 1,
-        textDirection: TextDirection.ltr,
-      )..layout(minWidth: 0, maxWidth: double.infinity);
-
-      var buttonWidth = textPainter.width + paddingOnButtons * 2;
-
-      if (availableRowLength - buttonWidth < 0) {
-        rows.add(
-          _buildRow(
-            context,
-            currentRow,
-            availableRowLength,
-          ),
-        );
-        currentRow = <int>[];
-        availableRowLength = width;
-      }
-
-      currentRow.add(i);
-
-      availableRowLength -= buttonWidth + paddingBetweenButtons;
-    }
-    if (currentRow.isNotEmpty) {
-      rows.add(
-        _buildRow(
-          context,
-          currentRow,
-          availableRowLength,
-        ),
-      );
-    }
-    return rows;
-  }
-
-  @override
-  Widget build(BuildContext context) => Column(
-        children: _buildButtonRows(
-          context,
-        ),
-      );
 }

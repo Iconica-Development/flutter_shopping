@@ -1,4 +1,3 @@
-import "package:example/src/models/my_product.dart";
 import "package:example/src/models/my_shop.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
 
@@ -20,8 +19,8 @@ ProductPageContent getShopContent(String shopId) {
 
 /// This function should have your own implementation. Generally this would
 /// contain some API call to fetch the list of products for a shop.
-List<MyProduct> getProducts(String shopId) => <MyProduct>[
-      MyProduct(
+List<Product> getProducts(String shopId) => <Product>[
+      Product(
         id: "1",
         name: "White bread",
         price: 2.99,
@@ -29,19 +28,22 @@ List<MyProduct> getProducts(String shopId) => <MyProduct>[
         imageUrl: "https://via.placeholder.com/150",
         hasDiscount: true,
         discountPrice: 1.99,
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "2",
         name: "Brown bread",
         price: 2.99,
         category: "Loaves",
         imageUrl: "https://via.placeholder.com/150",
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "3",
         name: "Cheese sandwich",
         price: 1.99,
         category: "Sandwiches",
         imageUrl: "https://via.placeholder.com/150",
+        description: "",
       ),
     ];

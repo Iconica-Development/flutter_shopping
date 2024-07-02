@@ -2,17 +2,17 @@
 class OrderDetailLocalization {
   /// Constructor for the order detail localization.
   const OrderDetailLocalization({
-    this.nextButton = "Next",
-    this.backButton = "Back",
+    this.nextButton = "Order",
     this.completeButton = "Complete",
+    this.orderDetailsTitle = "Information",
   });
 
   /// Next button localization.
   final String nextButton;
 
-  /// Back button localization.
-  final String backButton;
-
   /// Complete button localization.
   final String completeButton;
+
+  /// Title for the order details page.
+  final String orderDetailsTitle;
 }

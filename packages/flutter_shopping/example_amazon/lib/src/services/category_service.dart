@@ -1,5 +1,4 @@
 import "package:amazon/src/models/my_category.dart";
-import "package:amazon/src/models/my_product.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
 
 Map<String, String> categories = {
@@ -8,8 +7,8 @@ Map<String, String> categories = {
   "TV's": "TV's",
 };
 
-List<MyProduct> allProducts() => [
-      MyProduct(
+List<Product> allProducts() => [
+      Product(
         id: "1",
         name:
             "Skar Audio Single 8\" Complete 1,200 Watt EVL Series Subwoofer Bass Package - Includes Loaded Enclosure with...",
@@ -17,8 +16,9 @@ List<MyProduct> allProducts() => [
         category: categories["Electronics"]!,
         imageUrl:
             "https://m.media-amazon.com/images/I/710n3hnbfXL._AC_UY218_.jpg",
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "2",
         name:
             "Frameo 10.1 Inch WiFi Digital Picture Frame, 1280x800 HD IPS Touch Screen Photo Frame Electronic, 32GB Memory, Auto...",
@@ -26,8 +26,9 @@ List<MyProduct> allProducts() => [
         category: categories["Electronics"]!,
         imageUrl:
             "https://m.media-amazon.com/images/I/61O+aorCp0L._AC_UY218_.jpg",
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "3",
         name:
             "STREBITO Electronics Precision Screwdriver Sets 142-Piece with 120 Bits Magnetic Repair Tool Kit for iPhone, MacBook,...",
@@ -35,8 +36,9 @@ List<MyProduct> allProducts() => [
         category: categories["Electronics"]!,
         imageUrl:
             "https://m.media-amazon.com/images/I/81-C7lGtQsL._AC_UY218_.jpg",
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "4",
         name:
             "Samsung Galaxy A15 (SM-155M/DSN), 128GB 6GB RAM, Dual SIM, Factory Unlocked GSM, International Version (Wall...",
@@ -44,8 +46,9 @@ List<MyProduct> allProducts() => [
         category: categories["Smart phones"]!,
         imageUrl:
             "https://m.media-amazon.com/images/I/51rp0nqaPoL._AC_UY218_.jpg",
+        description: "",
       ),
-      MyProduct(
+      Product(
         id: "5",
         name:
             "SAMSUNG Galaxy S24 Ultra Cell Phone, 512GB AI Smartphone, Unlocked Android, 50MP Zoom Camera, Long...",
@@ -53,6 +56,7 @@ List<MyProduct> allProducts() => [
         category: categories["Smart phones"]!,
         imageUrl:
             "https://m.media-amazon.com/images/I/71ZoDT7a2wL._AC_UY218_.jpg",
+        description: "",
       ),
     ];
 
@@ -72,7 +76,7 @@ ProductPageContent getShopContent(String shopId) {
   );
 }
 
-List<MyProduct> getProducts(String categoryId) {
+List<Product> getProducts(String categoryId) {
   if (categoryId == "1") {
     return allProducts();
   } else if (categoryId == "2") {

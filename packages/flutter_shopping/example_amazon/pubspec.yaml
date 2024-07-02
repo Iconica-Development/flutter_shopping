@@ -17,7 +17,10 @@ dependencies:
       url: https://github.com/Iconica-Development/flutter_nested_categories
       ref: 0.0.1
   flutter_shopping:
-    path: ../
+    git:
+      url: https://github.com/Iconica-Development/flutter_shopping
+      path: packages/flutter_shopping
+      ref: 2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,9 @@
 import "package:flutter/foundation.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 
 /// Product service. This class is responsible for managing the products.
 /// The service is used to add, remove, and update products.
-class ProductService<T extends ShoppingCartProduct> extends ChangeNotifier {
+class ProductService<T extends Product> extends ChangeNotifier {
   /// Creates a product service.
   ProductService(this.products);
 

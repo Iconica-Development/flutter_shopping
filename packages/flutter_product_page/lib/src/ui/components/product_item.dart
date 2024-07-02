@@ -1,6 +1,6 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping/flutter_shopping.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
 /// Product item widget.
@@ -15,14 +15,13 @@ class ProductItem extends StatelessWidget {
   });
 
   /// Product to display.
-  final ProductPageProduct product;
+  final Product product;
 
   /// Function to call when the product detail is requested.
-  final Function(BuildContext context, ProductPageProduct selectedProduct)
-      onProductDetail;
+  final Function(BuildContext context, Product selectedProduct) onProductDetail;
 
   /// Function to call when the product is added to the cart.
-  final Function(ProductPageProduct selectedProduct) onAddToCart;
+  final Function(Product selectedProduct) onAddToCart;
 
   /// Localizations for the product page.
   final ProductPageLocalization localizations;
@@ -76,7 +75,10 @@ class ProductItem extends StatelessWidget {
       padding: const EdgeInsets.only(left: 4),
       child: IconButton(
         onPressed: () => onProductDetail(context, product),
-        icon: const Icon(Icons.info_outline),
+        icon: Icon(
+          Icons.info_outline,
+          color: theme.colorScheme.primary,
+        ),
       ),
     );
 
@@ -84,10 +86,7 @@ class ProductItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         _PriceLabel(
-          price: product.price,
-          discountPrice: (product.hasDiscount && product.discountPrice != null)
-              ? product.discountPrice
-              : null,
+          product: product,
         ),
         _AddToCardButton(
           product: product,
@@ -113,42 +112,36 @@ class ProductItem extends StatelessWidget {
 
 class _PriceLabel extends StatelessWidget {
   const _PriceLabel({
-    required this.price,
-    required this.discountPrice,
+    required this.product,
   });
 
-  final double price;
-  final double? discountPrice;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    if (discountPrice == null)
-      return Text(
-        price.toStringAsFixed(2),
-        style: theme.textTheme.bodyMedium,
-      );
-    else
-      return Row(
-        children: [
+    return Row(
+      children: [
+        if (product.hasDiscount) ...[
           Text(
-            price.toStringAsFixed(2),
+            product.price.toStringAsFixed(2),
             style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 10,
-              color: theme.colorScheme.primary,
               decoration: TextDecoration.lineThrough,
             ),
+            textAlign: TextAlign.center,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 4.0),
-            child: Text(
-              discountPrice!.toStringAsFixed(2),
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          const SizedBox(width: 4),
         ],
-      );
+        Text(
+          product.hasDiscount
+              ? product.discountPrice!.toStringAsFixed(2)
+              : product.price.toStringAsFixed(2),
+          style: theme.textTheme.bodySmall,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 }
 
@@ -158,36 +151,30 @@ class _AddToCardButton extends StatelessWidget {
     required this.onAddToCart,
   });
 
-  final ProductPageProduct product;
-  final Function(ProductPageProduct product) onAddToCart;
+  final Product product;
+  final Function(Product product) onAddToCart;
 
   static const double boxSize = 29;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(4),
+      ),
       width: boxSize,
       height: boxSize,
       child: Center(
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: Icon(
+          icon: const Icon(
             Icons.add,
-            color: theme.primaryColor,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => onAddToCart(product),
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(
-              theme.colorScheme.secondary,
-            ),
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
         ),
       ),
     );
