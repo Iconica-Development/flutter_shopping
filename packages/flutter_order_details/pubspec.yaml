@@ -1,6 +1,7 @@
 name: flutter_order_details
 description: "A Flutter module for order details."
-version: 1.0.0
+version: 2.0.0
+publish_to: 'none'
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -8,6 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  animated_toggle:
+    git:
+      url: https://github.com/Iconica-Development/flutter_animated_toggle
+      ref: 0.0.3
+  flutter_form_wizard:
+    git:
+      url: https://github.com/Iconica-Development/flutter_form_wizard
+      ref: 6.5.0
 
 dev_dependencies:
   flutter_test:
@@ -18,13 +27,4 @@ dev_dependencies:
       ref: 7.0.0
 
 flutter:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
