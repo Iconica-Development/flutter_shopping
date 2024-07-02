@@ -92,13 +92,30 @@ class DefaultOrderSucces extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            FilledButton(
-              onPressed: () {
-                configuration.onCompleteUserStory.call(context);
-              },
-              child: Text(
-                "Place another order",
-                style: theme.textTheme.displayLarge,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () async {
+                    configuration.onCompleteUserStory.call(context);
+                  },
+                  style: theme.filledButtonTheme.style?.copyWith(
+                    backgroundColor: WidgetStateProperty.all(
+                      theme.colorScheme.primary,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      "Place another order",
+                      style: theme.textTheme.displayLarge,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

@@ -69,12 +69,12 @@ Widget _defaultNextButtonBuilder(
     "Choose date and time",
     "Next",
     "Next",
-    "Place another order",
   ];
+
   return Align(
     alignment: Alignment.bottomCenter,
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 48),
+      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 32),
       child: SizedBox(
         width: double.infinity,
         child: FilledButton(
@@ -90,7 +90,7 @@ Widget _defaultNextButtonBuilder(
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
-              vertical: 8.0,
+              vertical: 12,
             ),
             child: Text(
               nextButtonTexts[currentStep],

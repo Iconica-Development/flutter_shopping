@@ -159,34 +159,29 @@ class _DefaultConfirmOrderButton<T extends Product> extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 80),
-      child: Row(
-        children: [
-          Expanded(
-            child: FilledButton(
-              style: theme.filledButtonTheme.style?.copyWith(
-                backgroundColor: WidgetStateProperty.all(
-                  theme.colorScheme.primary,
-                ),
-              ),
-              onPressed: () => onConfirmOrderPressed(
-                configuration.productService.products,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 5.0,
-                ),
-                child: Text(
-                  configuration.localizations.placeOrder,
-                  style: theme.textTheme.displayLarge?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
-                ),
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 60),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: () => onConfirmOrderPressed(
+            configuration.productService.products,
+          ),
+          style: theme.filledButtonTheme.style?.copyWith(
+            backgroundColor: WidgetStateProperty.all(
+              theme.colorScheme.primary,
             ),
           ),
-        ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12,
+            ),
+            child: Text(
+              configuration.localizations.placeOrder,
+              style: theme.textTheme.displayLarge,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -219,23 +219,29 @@ Widget _defaultNavigateToShoppingCartBuilder(
 
   return ListenableBuilder(
     listenable: notifier,
-    builder: (context, widget) => FilledButton(
-      onPressed: configuration.getProductsInShoppingCart?.call() != 0
-          ? configuration.onNavigateToShoppingCart
-          : null,
-      style: theme.filledButtonTheme.style?.copyWith(
-        backgroundColor: WidgetStateProperty.all(
-          theme.colorScheme.primary,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 8.0,
-        ),
-        child: Text(
-          configuration.localizations.navigateToShoppingCart,
-          style: theme.textTheme.displayLarge,
+    builder: (context, widget) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 60),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: configuration.getProductsInShoppingCart?.call() != 0
+              ? configuration.onNavigateToShoppingCart
+              : null,
+          style: theme.filledButtonTheme.style?.copyWith(
+            backgroundColor: WidgetStateProperty.all(
+              theme.colorScheme.primary,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12,
+            ),
+            child: Text(
+              configuration.localizations.navigateToShoppingCart,
+              style: theme.textTheme.displayLarge,
+            ),
+          ),
         ),
       ),
     ),
