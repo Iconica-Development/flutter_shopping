@@ -136,7 +136,10 @@ Widget _defaultProductItemBuilder(
               await showModalBottomSheet(
                 context: context,
                 backgroundColor: theme.colorScheme.surface,
-                builder: (context) => ProductItemPopup(product: product, configuration: configuration)
+                builder: (context) => ProductItemPopup(
+                  product: product,
+                  configuration: configuration,
+                ),
               );
             },
             icon: Icon(

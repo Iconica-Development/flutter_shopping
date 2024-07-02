@@ -34,7 +34,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
           ),
 
           // (REQUIRED): Function to navigate to the shopping cart
-          onNavigateToShoppingCart: () => onCompleteProductPage(context),
+          onNavigateToShoppingCart: () async => onCompleteProductPage(context),
 
           // (RECOMMENDED): Function to get the number of products in the
           // shopping cart. This is used to display the number of products
@@ -116,7 +116,7 @@ FlutterShoppingConfiguration getFlutterShoppingConfiguration() =>
 
           // (OPTIONAL/REQUIRED) on confirm order callback:
           // Either use this callback or the placeOrderButtonBuilder.
-          onConfirmOrder: (products) => onCompleteShoppingCart(context),
+          onConfirmOrder: (products) async => onCompleteShoppingCart(context),
 
           // (RECOMMENDED) localizations:
           localizations: const ShoppingCartLocalizations(),

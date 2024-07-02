@@ -1,5 +1,4 @@
 import "package:flutter_shopping/flutter_shopping.dart";
-import "package:flutter_shopping/src/config/default_order_detail_configuration.dart";
 import "package:flutter_shopping/src/widgets/default_order_failed_widget.dart";
 import "package:flutter_shopping/src/widgets/default_order_succes_widget.dart";
 import "package:go_router/go_router.dart";
@@ -29,8 +28,11 @@ List<GoRoute> getShoppingStoryRoutes({
         builder: (context, state) => configuration.orderDetailsBuilder != null
             ? configuration.orderDetailsBuilder!(context)
             : OrderDetailScreen(
-                configuration:
-                    getDefaultOrderDetailConfiguration(context, configuration),
+                configuration: OrderDetailConfiguration(
+                  onCompleted: (result) {
+                    context.go(FlutterShoppingPathRoutes.orderSuccess);
+                  },
+                ),
               ),
       ),
       GoRoute(
