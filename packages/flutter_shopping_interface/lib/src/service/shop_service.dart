@@ -6,4 +6,10 @@ import "package:flutter_shopping_interface/src/model/shop.dart";
 abstract class ShopService with ChangeNotifier {
   /// Retrieve a list of shops
   Future<List<Shop>> getShops();
+
+  /// Select a shop
+  void selectShop(Shop shop);
+
+  /// The currently selected shop
+  Shop? get selectedShop;
 }

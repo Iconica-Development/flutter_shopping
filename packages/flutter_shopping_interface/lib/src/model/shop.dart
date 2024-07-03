@@ -7,7 +7,7 @@ abstract class ShopInterface {
   });
 
   /// Shop id
-  final int id;
+  final String id;
 
   /// Shop name
   final String name;
@@ -21,7 +21,7 @@ class Shop implements ShopInterface {
     required this.name,
   });
   @override
-  final int id;
+  final String id;
 
   @override
   final String name;
