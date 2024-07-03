@@ -1,24 +1,14 @@
-import "package:flutter/material.dart";
-
 /// Shopping cart localizations
-class ShoppingCartLocalizations {
+class ShoppingCartTranslations {
   /// Creates shopping cart localizations
-  const ShoppingCartLocalizations({
-    this.locale = const Locale("en", "US"),
+  const ShoppingCartTranslations({
     this.placeOrder = "Order",
     this.sum = "Subtotal:",
     this.cartTitle = "Products",
     this.close = "close",
   });
 
-  /// Locale for the shopping cart.
-  /// This locale will be used to format the currency.
-  /// Default is English.
-  final Locale locale;
-
-  /// Localization for the place order button.
-  /// This text will only be displayed if you're not using the place order
-  /// button builder.
+  /// Text for the place order button.
   final String placeOrder;
 
   /// Localization for the sum.

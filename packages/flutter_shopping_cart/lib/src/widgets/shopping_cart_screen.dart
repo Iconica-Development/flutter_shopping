@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
 
 /// Shopping cart screen widget.
-class ShoppingCartScreen<T extends Product> extends StatelessWidget {
+class ShoppingCartScreen extends StatelessWidget {
   /// Creates a shopping cart screen.
   const ShoppingCartScreen({
     required this.configuration,
@@ -10,7 +10,7 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
   });
 
   /// Configuration for the shopping cart screen.
-  final ShoppingCartConfig<T> configuration;
+  final ShoppingCartConfig configuration;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,10 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
       child: Column(
         children: [
           if (configuration.titleBuilder != null) ...{
-            configuration.titleBuilder!(context),
+            configuration.titleBuilder!(
+              context,
+              configuration.translations.cartTitle,
+            ),
           } else ...{
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -29,7 +32,7 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    configuration.localizations.cartTitle,
+                    configuration.translations.cartTitle,
                     style: theme.textTheme.titleLarge,
                     textAlign: TextAlign.start,
                   ),
@@ -38,22 +41,16 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
             ),
           },
           ListenableBuilder(
-            listenable: configuration.productService,
+            listenable: configuration.service,
             builder: (context, _) {
-              var products = configuration.productService.products;
-
-              if (products.isEmpty) {
-                return configuration.noContentBuilder(context);
-              }
+              var products = configuration.service.products;
 
               return Column(
                 children: [
                   for (var product in products)
                     configuration.productItemBuilder(
                       context,
-                      configuration.localizations.locale,
                       product,
-                      configuration.productService,
                       configuration,
                     ),
                   // Additional whitespace at the bottom to make sure the
@@ -71,24 +68,18 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: configuration.appBar ??
-          AppBar(
-            title: Text(
-              "Shopping cart",
-              style: theme.textTheme.headlineLarge,
-            ),
-          ),
+      appBar: configuration.appBar.call(context),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: [
             Padding(
-              padding: configuration.padding,
+              padding: configuration.pagePadding,
               child: productBuilder,
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: _BottomSheet<T>(
+              child: _BottomSheet(
                 configuration: configuration,
               ),
             ),
@@ -99,124 +90,31 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
   }
 }
 
-class _BottomSheet<T extends Product> extends StatelessWidget {
+class _BottomSheet extends StatelessWidget {
   const _BottomSheet({
-    required this.configuration,
-    super.key,
-  });
-
-  final ShoppingCartConfig<T> configuration;
-
-  @override
-  Widget build(BuildContext context) {
-    var placeOrderButton = ListenableBuilder(
-      listenable: configuration.productService,
-      builder: (BuildContext context, Widget? child) =>
-          configuration.confirmOrderButtonBuilder != null
-              ? configuration.confirmOrderButtonBuilder!(context)
-              : _DefaultConfirmOrderButton<T>(configuration: configuration),
-    );
-
-    var bottomSheet = ListenableBuilder(
-      listenable: configuration.productService,
-      builder: (BuildContext context, Widget? child) =>
-          configuration.sumBottomSheetBuilder != null
-              ? configuration.sumBottomSheetBuilder!(context)
-              : _DefaultSumBottomSheet(configuration: configuration),
-    );
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        bottomSheet,
-        placeOrderButton,
-      ],
-    );
-  }
-}
-
-class _DefaultConfirmOrderButton<T extends Product> extends StatelessWidget {
-  const _DefaultConfirmOrderButton({
-    required this.configuration,
-  });
-
-  final ShoppingCartConfig<T> configuration;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    void onConfirmOrderPressed(List<T> products) {
-      if (configuration.onConfirmOrder == null) {
-        return;
-      }
-
-      if (products.isEmpty) {
-        return;
-      }
-
-      configuration.onConfirmOrder!(products);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 60),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: () => onConfirmOrderPressed(
-            configuration.productService.products,
-          ),
-          style: theme.filledButtonTheme.style?.copyWith(
-            backgroundColor: WidgetStateProperty.all(
-              theme.colorScheme.primary,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12,
-            ),
-            child: Text(
-              configuration.localizations.placeOrder,
-              style: theme.textTheme.displayLarge,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DefaultSumBottomSheet extends StatelessWidget {
-  const _DefaultSumBottomSheet({
     required this.configuration,
   });
 
   final ShoppingCartConfig configuration;
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    var totalPrice = configuration.productService.products
-        .map((product) => product.price * product.quantity)
-        .fold(0.0, (a, b) => a + b);
-
-    return Padding(
-      padding: configuration.bottomPadding,
-      child: Row(
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            configuration.localizations.sum,
-            style: theme.textTheme.titleMedium,
+          ListenableBuilder(
+            listenable: configuration.service,
+            builder: (BuildContext context, Widget? child) =>
+                configuration.sumBottomSheetBuilder(context, configuration),
           ),
-          const Spacer(),
-          Text(
-            "€ ${totalPrice.toStringAsFixed(2)}",
-            style: theme.textTheme.bodyMedium,
+          ListenableBuilder(
+            listenable: configuration.service,
+            builder: (BuildContext context, Widget? child) =>
+                configuration.confirmOrderButtonBuilder(
+              context,
+              configuration,
+              configuration.onConfirmOrder,
+            ),
           ),
         ],
-      ),
-    );
-  }
+      );
 }

@@ -54,4 +54,7 @@ class LocalShoppingCartService
     }
     notifyListeners();
   }
+
+  @override
+  List<Product> get products => _products;
 }
