@@ -22,23 +22,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget build(BuildContext context) {
     var controller = FlutterFormController();
     return Scaffold(
-      appBar: widget.configuration.appBar
-          .call(context, widget.configuration.localization),
+      appBar: widget.configuration.appBar.call(
+        context,
+        widget.configuration.translations.orderDetailsTitle,
+      ),
       body: FlutterForm(
         formController: controller,
         options: FlutterFormOptions(
-          nextButton: (a, b) => widget.configuration.nextbuttonBuilder(
-            a,
-            b,
+          nextButton: (pageNumber, checkingPages) =>
+              widget.configuration.nextbuttonBuilder(
+            pageNumber,
+            checkingPages,
             context,
             widget.configuration,
             controller,
           ),
           pages: widget.configuration.pages.call(context),
-          onFinished: (data) {
-            widget.configuration.onCompleted.call(data);
+          onFinished: (data) async {
+            widget.configuration.onStepsCompleted.call(
+              widget.configuration.shoppingService.shopService.selectedShop!.id,
+              widget.configuration.shoppingService.shoppingCartService.products,
+              data,
+              widget.configuration,
+            );
           },
-          onNext: (step, data) {},
+          onNext: (step, data) {
+            widget.configuration.onNextStep.call(step, data);
+          },
         ),
       ),
     );

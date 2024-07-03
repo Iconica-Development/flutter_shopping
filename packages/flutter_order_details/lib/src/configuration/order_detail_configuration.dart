@@ -4,17 +4,25 @@ import "package:animated_toggle/animated_toggle.dart";
 import "package:flutter/material.dart";
 import "package:flutter_form_wizard/flutter_form.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Configuration for the order detail screen.
 class OrderDetailConfiguration {
   /// Constructor for the order detail configuration.
   OrderDetailConfiguration({
-    required this.onCompleted,
+    required this.shoppingService,
+    required this.onNextStep,
+    required this.onStepsCompleted,
+    required this.onCompleteOrderDetails,
     this.pages = _defaultPages,
-    this.localization = const OrderDetailLocalization(),
+    this.translations = const OrderDetailTranslations(),
     this.appBar = _defaultAppBar,
     this.nextbuttonBuilder = _defaultNextButtonBuilder,
+    this.orderSuccessBuilder = _defaultOrderSuccess,
   });
+
+  /// The shopping service that is used
+  final ShoppingService shoppingService;
 
   /// The different steps that the user has to go through to complete the order.
   /// Each step contains a list of fields that the user has to fill in.
@@ -22,36 +30,56 @@ class OrderDetailConfiguration {
 
   /// Callback function that is called when the user has completed the order.
   /// The result of the order is passed as an argument to the function.
-  final Function(dynamic value) onCompleted;
+  final Function(
+    String shopId,
+    List<Product> products,
+    Map<int, Map<String, dynamic>> value,
+    OrderDetailConfiguration configuration,
+  ) onStepsCompleted;
+
+  /// Callback function that is called when the user has completed a step.
+  final Function(int currentStep, Map<String, dynamic> data) onNextStep;
 
   /// Localization for the order detail screen.
-  final OrderDetailLocalization localization;
+  final OrderDetailTranslations translations;
 
   /// Optional app bar that you can pass to the order detail screen.
   final AppBar Function(
     BuildContext context,
-    OrderDetailLocalization localizations,
+    String title,
   ) appBar;
 
   /// Optional next button builder that you can pass to the order detail screen.
   final Widget Function(
-    int a,
+    int currentStep,
     // ignore: avoid_positional_boolean_parameters
-    bool b,
+    bool checkingPages,
     BuildContext context,
     OrderDetailConfiguration configuration,
     FlutterFormController controller,
   ) nextbuttonBuilder;
+
+  /// Optional builder for the order success screen.
+  final Widget Function(
+    BuildContext context,
+    OrderDetailConfiguration,
+    Map<int, Map<String, dynamic>> orderDetails,
+  ) orderSuccessBuilder;
+
+  /// This function is called after the order has been completed and
+  /// the success screen has been shown.
+  final Function(BuildContext context, OrderDetailConfiguration configuration)
+      onCompleteOrderDetails;
 }
 
 AppBar _defaultAppBar(
   BuildContext context,
-  OrderDetailLocalization localizations,
+  String title,
 ) {
   var theme = Theme.of(context);
   return AppBar(
     title: Text(
-      localizations.orderDetailsTitle,
+      title,
       style: theme.textTheme.headlineLarge,
     ),
   );
@@ -535,3 +563,13 @@ List<FlutterFormPage> _defaultPages(BuildContext context) {
     ),
   ];
 }
+
+Widget _defaultOrderSuccess(
+  BuildContext context,
+  OrderDetailConfiguration configuration,
+  Map<int, Map<String, dynamic>> orderDetails,
+) =>
+    DefaultOrderSucces(
+      configuration: configuration,
+      orderDetails: orderDetails,
+    );

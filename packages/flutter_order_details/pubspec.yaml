@@ -1,10 +1,10 @@
 name: flutter_order_details
 description: "A Flutter module for order details."
 version: 2.0.0
-publish_to: 'none'
+publish_to: "none"
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -17,6 +17,16 @@ dependencies:
     git:
       url: https://github.com/Iconica-Development/flutter_form_wizard
       ref: 6.5.0
+  flutter_shopping_interface:
+    git:
+      url: https://github.com/Iconica-Development/flutter_shopping
+      path: packages/flutter_shopping_interface
+      ref: 2.0.0
+  collection: ^1.18.0
+
+dependency_overrides:
+  flutter_shopping_interface:
+    path: ../flutter_shopping_interface
 
 dev_dependencies:
   flutter_test:
@@ -27,4 +37,3 @@ dev_dependencies:
       ref: 7.0.0
 
 flutter:
-

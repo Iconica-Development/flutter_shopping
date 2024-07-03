@@ -1,20 +1,30 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_order_details/flutter_order_details.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Default order success widget.
 class DefaultOrderSucces extends StatelessWidget {
   /// Constructor for the DefaultOrderSucces.
   const DefaultOrderSucces({
     required this.configuration,
+    required this.orderDetails,
     super.key,
   });
 
-  /// Configuration for the user-story.
-  final FlutterShoppingConfiguration configuration;
+  /// Configuration for the user-stor
+  final OrderDetailConfiguration configuration;
+
+  /// Order details.
+  final Map<int, Map<String, dynamic>> orderDetails;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+
+    var discountedProducts = configuration
+        .shoppingService.productService.products
+        .where((product) => product.hasDiscount)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -42,16 +52,19 @@ class DefaultOrderSucces extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    "Thank you Peter for your order!",
+                    "Thank you ${orderDetails[0]!['name']} for your order!",
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(
                     height: 16,
                   ),
                   Text(
-                    "The order was placed at Bakkerij de Goudkorst."
+                    "The order was placed"
+                    // ignore: lines_longer_than_80_chars
+                    " at ${configuration.shoppingService.shopService.selectedShop?.name}."
                     " You can pick this"
-                    " up on Monday, February 7 at 1:00 PM.",
+                    " up ${orderDetails[1]!['date']} at"
+                    " ${orderDetails[1]!['multipleChoice']}.",
                     style: theme.textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -84,9 +97,19 @@ class DefaultOrderSucces extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 children: [
                   const SizedBox(width: 32),
-                  _discount(context),
-                  const SizedBox(width: 8),
-                  _discount(context),
+                  // _discount(context),
+                  // const SizedBox(width: 8),
+                  // _discount(context),
+                  for (var product in discountedProducts) ...[
+                    _discount(
+                      context,
+                      product,
+                      configuration.shoppingService.shopService.selectedShop!,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                  ],
                   const SizedBox(width: 32),
                 ],
               ),
@@ -98,7 +121,8 @@ class DefaultOrderSucces extends StatelessWidget {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () async {
-                    configuration.onCompleteUserStory.call(context);
+                    configuration.onCompleteOrderDetails
+                        .call(context, configuration);
                   },
                   style: theme.filledButtonTheme.style?.copyWith(
                     backgroundColor: WidgetStateProperty.all(
@@ -125,7 +149,7 @@ class DefaultOrderSucces extends StatelessWidget {
   }
 }
 
-Widget _discount(BuildContext context) {
+Widget _discount(BuildContext context, Product product, Shop shop) {
   var theme = Theme.of(context);
   return Container(
     decoration: BoxDecoration(
@@ -139,14 +163,11 @@ Widget _discount(BuildContext context) {
     child: Stack(
       children: [
         ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+          borderRadius: BorderRadius.circular(
+            10,
           ),
           child: Image.network(
-            "https://picsum.photos/150",
+            product.imageUrl,
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,
@@ -166,7 +187,7 @@ Widget _discount(BuildContext context) {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              "Butcher Puurvlees",
+              shop.name,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: Colors.white,
               ),
@@ -189,7 +210,7 @@ Widget _discount(BuildContext context) {
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
-                "Chicken legs, now for 4,99",
+                "${product.name}, now for ${product.price.toStringAsFixed(2)}",
                 style: theme.textTheme.bodyMedium,
               ),
             ),

@@ -5,8 +5,8 @@ import "package:flutter_shopping_interface/src/model/product.dart";
 abstract class OrderService {
   /// Create an order
   Future<void> createOrder(
-    int shopId,
+    String shopId,
     List<Product> products,
-    Map<String, dynamic> clientInformation,
+    Map<int, Map<String, dynamic>> clientInformation,
   );
 }

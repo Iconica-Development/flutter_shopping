@@ -62,4 +62,7 @@ class LocalProductService with ChangeNotifier implements ProductService {
     ];
     return Future.value(_products);
   }
+
+  @override
+  List<Product> get products => _products;
 }

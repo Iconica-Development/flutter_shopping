@@ -5,11 +5,11 @@ import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 class LocalOrderService with ChangeNotifier implements OrderService {
   @override
   Future<void> createOrder(
-    int shopId,
+    String shopId,
     List<Product> products,
-    Map<String, dynamic> clientInformation,
-  ) {
-    // No use case for this method yet
-    throw UnimplementedError();
+    Map<int, Map<String, dynamic>> clientInformation,
+  ) async {
+    // Create the order
+    notifyListeners();
   }
 }

@@ -2,7 +2,6 @@
 library flutter_order_details;
 
 export "src/configuration/order_detail_configuration.dart";
-export "src/configuration/order_detail_localization.dart";
-export "src/configuration/order_detail_title_style.dart";
-export "src/models/order_result.dart";
-export "src/widgets/order_detail_screen.dart";
+export "src/configuration/order_detail_translations.dart";
+export "src/order_detail_screen.dart";
+export "src/widgets/order_succes.dart";

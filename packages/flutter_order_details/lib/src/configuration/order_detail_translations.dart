@@ -1,7 +1,7 @@
 /// Localizations for the order detail page.
-class OrderDetailLocalization {
+class OrderDetailTranslations {
   /// Constructor for the order detail localization.
-  const OrderDetailLocalization({
+  const OrderDetailTranslations({
     this.nextButton = "Order",
     this.completeButton = "Complete",
     this.orderDetailsTitle = "Information",
