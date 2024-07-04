@@ -1,7 +1,7 @@
 /// Localization for the product page
-class ProductPageLocalization {
+class ProductPageTranslations {
   /// Default constructor
-  const ProductPageLocalization({
+  const ProductPageTranslations({
     this.navigateToShoppingCart = "View shopping cart",
     this.discountTitle = "Weekly offer",
     this.failedToLoadImageExplenation = "Failed to load image",

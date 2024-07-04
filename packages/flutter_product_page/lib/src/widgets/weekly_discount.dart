@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// A widget that displays a weekly discount.
 class WeeklyDiscount extends StatelessWidget {
@@ -27,7 +28,7 @@ class WeeklyDiscount extends StatelessWidget {
     var bottomText = Padding(
       padding: const EdgeInsets.all(20.0),
       child: Text(
-        configuration.getDiscountDescription!(product),
+        configuration.discountDescription(product),
         style: theme.textTheme.bodyMedium,
         textAlign: TextAlign.left,
       ),
@@ -50,7 +51,7 @@ class WeeklyDiscount extends StatelessWidget {
               Icons.error_outline_rounded,
               color: Colors.red,
             ),
-            Text(configuration.localizations.failedToLoadImageExplenation),
+            Text(configuration.translations.failedToLoadImageExplenation),
           ],
         ),
       ),
@@ -86,7 +87,7 @@ class WeeklyDiscount extends StatelessWidget {
             horizontal: 16,
           ),
           child: Text(
-            configuration.localizations.discountTitle,
+            configuration.translations.discountTitle,
             style: theme.textTheme.headlineSmall,
             textAlign: TextAlign.left,
           ),

@@ -1,6 +1,7 @@
 import "package:cached_network_image/cached_network_image.dart";
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
 /// Product item widget.
@@ -10,7 +11,7 @@ class ProductItem extends StatelessWidget {
     required this.product,
     required this.onProductDetail,
     required this.onAddToCart,
-    required this.localizations,
+    required this.translations,
     super.key,
   });
 
@@ -18,13 +19,17 @@ class ProductItem extends StatelessWidget {
   final Product product;
 
   /// Function to call when the product detail is requested.
-  final Function(BuildContext context, Product selectedProduct) onProductDetail;
+  final Function(
+    BuildContext context,
+    Product selectedProduct,
+    String closeText,
+  ) onProductDetail;
 
   /// Function to call when the product is added to the cart.
   final Function(Product selectedProduct) onAddToCart;
 
   /// Localizations for the product page.
-  final ProductPageLocalization localizations;
+  final ProductPageTranslations translations;
 
   /// Size of the product image.
   static const double imageSize = 44;
@@ -46,7 +51,7 @@ class ProductItem extends StatelessWidget {
         fit: BoxFit.cover,
         placeholder: (context, url) => loadingImageSkeleton,
         errorWidget: (context, url, error) => Tooltip(
-          message: localizations.failedToLoadImageExplenation,
+          message: translations.failedToLoadImageExplenation,
           child: Container(
             width: 48,
             height: 48,
@@ -74,7 +79,11 @@ class ProductItem extends StatelessWidget {
     var productInformationIcon = Padding(
       padding: const EdgeInsets.only(left: 4),
       child: IconButton(
-        onPressed: () => onProductDetail(context, product),
+        onPressed: () => onProductDetail(
+          context,
+          product,
+          translations.close,
+        ),
         icon: Icon(
           Icons.info_outline,
           color: theme.colorScheme.primary,

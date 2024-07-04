@@ -16,57 +16,6 @@ class ShoppingCartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    var productBuilder = SingleChildScrollView(
-      child: Column(
-        children: [
-          if (configuration.titleBuilder != null) ...{
-            configuration.titleBuilder!(
-              context,
-              configuration.translations.cartTitle,
-            ),
-          } else ...{
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 32,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    configuration.translations.cartTitle,
-                    style: theme.textTheme.titleLarge,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-            ),
-          },
-          ListenableBuilder(
-            listenable: configuration.service,
-            builder: (context, _) {
-              var products = configuration.service.products;
-
-              return Column(
-                children: [
-                  for (var product in products)
-                    configuration.productItemBuilder(
-                      context,
-                      product,
-                      configuration,
-                    ),
-                  // Additional whitespace at the bottom to make sure the
-                  // last product(s) are not hidden by the bottom sheet.
-                  SizedBox(
-                    height: configuration.confirmOrderButtonHeight +
-                        configuration.sumBottomSheetHeight,
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
     return Scaffold(
       appBar: configuration.appBar.call(context),
       body: SafeArea(
@@ -75,7 +24,54 @@ class ShoppingCartScreen extends StatelessWidget {
           children: [
             Padding(
               padding: configuration.pagePadding,
-              child: productBuilder,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (configuration.titleBuilder != null) ...{
+                      configuration.titleBuilder!(
+                        context,
+                        configuration.translations.cartTitle,
+                      ),
+                    } else ...{
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 32,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              configuration.translations.cartTitle,
+                              style: theme.textTheme.titleLarge,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                    },
+                    ListenableBuilder(
+                      listenable: configuration.service,
+                      builder: (context, _) => Column(
+                        children: [
+                          for (var product in configuration.service.products)
+                            configuration.productItemBuilder(
+                              context,
+                              product,
+                              configuration,
+                            ),
+
+                          // Additional whitespace at
+                          // the bottom to make sure the last
+                          // product(s) are not hidden by the bottom sheet.
+                          SizedBox(
+                            height: configuration.confirmOrderButtonHeight +
+                                configuration.sumBottomSheetHeight,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -108,8 +104,7 @@ class _BottomSheet extends StatelessWidget {
           ),
           ListenableBuilder(
             listenable: configuration.service,
-            builder: (BuildContext context, Widget? child) =>
-                configuration.confirmOrderButtonBuilder(
+            builder: (context, _) => configuration.confirmOrderButtonBuilder(
               context,
               configuration,
               configuration.onConfirmOrder,

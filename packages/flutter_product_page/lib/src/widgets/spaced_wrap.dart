@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// SpacedWrap is a widget that wraps a list of items that are spaced out and
 /// fill the available width.
@@ -16,7 +16,7 @@ class SpacedWrap extends StatelessWidget {
   });
 
   /// List of items.
-  final List<ProductPageShop> shops;
+  final List<Shop> shops;
 
   /// Selected item.
   final String selectedItem;
@@ -31,7 +31,7 @@ class SpacedWrap extends StatelessWidget {
   final double paddingOnButtons;
 
   /// Callback when an item is tapped.
-  final Function(ProductPageShop shop) onTap;
+  final Function(Shop shop) onTap;
 
   @override
   Widget build(BuildContext context) {

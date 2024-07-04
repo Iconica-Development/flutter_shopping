@@ -1,28 +1,14 @@
 import "package:flutter/material.dart";
 import "package:flutter_nested_categories/flutter_nested_categories.dart";
-import "package:flutter_product_page/src/services/shopping_cart_notifier.dart";
-import "package:flutter_product_page/src/ui/components/product_item.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
-
-/// A function that is called when a product is added to the cart.
-Product onAddToCartWrapper(
-  ProductPageConfiguration configuration,
-  ShoppingCartNotifier shoppingCartNotifier,
-  Product product,
-) {
-  shoppingCartNotifier.productsChanged();
-
-  configuration.onAddToCart(product);
-
-  return product;
-}
+import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_product_page/src/widgets/product_item.dart";
+import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Generates a [CategoryList] from a list of [Product]s and a
 /// [ProductPageConfiguration].
 Widget getCategoryList(
   BuildContext context,
   ProductPageConfiguration configuration,
-  ShoppingCartNotifier shoppingCartNotifier,
   List<Product> products,
 ) {
   var theme = Theme.of(context);
@@ -44,12 +30,9 @@ Widget getCategoryList(
               : ProductItem(
                   product: product,
                   onProductDetail: configuration.onProductDetail,
-                  onAddToCart: (Product product) => onAddToCartWrapper(
-                    configuration,
-                    shoppingCartNotifier,
-                    product,
-                  ),
-                  localizations: configuration.localizations,
+                  onAddToCart: (Product product) =>
+                      configuration.onAddToCart(product),
+                  translations: configuration.translations,
                 ),
         )
         .toList();

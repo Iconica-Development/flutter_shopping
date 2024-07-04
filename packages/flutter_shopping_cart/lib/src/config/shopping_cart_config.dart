@@ -95,90 +95,109 @@ Widget _defaultProductItemBuilder(
   ShoppingCartConfig configuration,
 ) {
   var theme = Theme.of(context);
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 20),
-    child: ListTile(
-      contentPadding: const EdgeInsets.only(top: 3, left: 4, bottom: 3),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            product.name,
-            style: theme.textTheme.titleMedium,
-          ),
-          IconButton(
-            onPressed: () async {
-              await showModalBottomSheet(
-                context: context,
-                backgroundColor: theme.colorScheme.surface,
-                builder: (context) => ProductItemPopup(
-                  product: product,
-                  configuration: configuration,
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.info_outline,
-              color: theme.colorScheme.primary,
+  return ListenableBuilder(
+    listenable: configuration.service,
+    builder: (context, _) => Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: ListTile(
+        contentPadding: const EdgeInsets.only(top: 3, left: 4, bottom: 3),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              product.name,
+              style: theme.textTheme.titleMedium,
             ),
-          ),
-        ],
-      ),
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: Image.network(
-          product.imageUrl,
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () async {
+                await showModalBottomSheet(
+                  context: context,
+                  backgroundColor: theme.colorScheme.surface,
+                  builder: (context) => ProductItemPopup(
+                    product: product,
+                    configuration: configuration,
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.info_outline,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
         ),
-      ),
-      trailing: Column(
-        children: [
-          Text(
-            product.price.toStringAsFixed(2),
-            style: theme.textTheme.labelSmall,
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: Image.network(
+            product.imageUrl,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                constraints: const BoxConstraints(),
-                padding: EdgeInsets.zero,
-                icon: const Icon(
-                  Icons.remove,
-                  color: Colors.black,
-                ),
-                onPressed: () =>
-                    configuration.service.removeOneProduct(product),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(2),
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(4),
+        ),
+        trailing: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (product.hasDiscount && product.discountPrice != null) ...[
+                  Text(
+                    product.discountPrice!.toStringAsFixed(2),
+                    style: theme.textTheme.labelSmall,
                   ),
-                  height: 30,
-                  width: 30,
-                  child: Text(
-                    "${product.quantity}",
-                    style: theme.textTheme.titleSmall,
-                    textAlign: TextAlign.center,
+                ] else ...[
+                  Text(
+                    product.price.toStringAsFixed(2),
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(
+                    Icons.remove,
+                    color: Colors.black,
+                  ),
+                  onPressed: () =>
+                      configuration.service.removeOneProduct(product),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    height: 30,
+                    width: 30,
+                    child: Text(
+                      "${product.quantity}",
+                      style: theme.textTheme.titleSmall,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
-              ),
-              IconButton(
-                constraints: const BoxConstraints(),
-                padding: EdgeInsets.zero,
-                icon: const Icon(
-                  Icons.add,
-                  color: Colors.black,
+                IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    configuration.service.addProduct(product);
+                  },
                 ),
-                onPressed: () => configuration.service.addProduct(product),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -190,9 +209,12 @@ Widget _defaultSumBottomSheetBuilder(
 ) {
   var theme = Theme.of(context);
 
-  var totalPrice = configuration.service.products
-      .map((product) => product.price * product.quantity)
-      .fold(0.0, (a, b) => a + b);
+  var totalPrice = configuration.service.products.fold<double>(
+    0,
+    (previousValue, element) =>
+        previousValue +
+        (element.discountPrice ?? element.price) * element.quantity,
+  );
 
   return Padding(
     padding: configuration.bottomPadding,
@@ -218,15 +240,16 @@ Widget _defaultConfirmOrderButton(
   Function(List<Product> products) onConfirmOrder,
 ) {
   var theme = Theme.of(context);
-
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 60),
     child: SizedBox(
       width: double.infinity,
       child: FilledButton(
-        onPressed: () => onConfirmOrder(
-          configuration.service.products,
-        ),
+        onPressed: configuration.service.products.isEmpty
+            ? null
+            : () => onConfirmOrder(
+                  configuration.service.products,
+                ),
         style: theme.filledButtonTheme.style?.copyWith(
           backgroundColor: WidgetStateProperty.all(
             theme.colorScheme.primary,
