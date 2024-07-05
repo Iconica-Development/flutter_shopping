@@ -17,20 +17,20 @@ class ShoppingCartScreen extends StatelessWidget {
     var theme = Theme.of(context);
 
     return Scaffold(
-      appBar: configuration.appBar.call(context),
+      appBar: configuration.appBar?.call(context),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: [
             Padding(
-              padding: configuration.pagePadding,
+              padding: configuration.pagePadding!,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     if (configuration.titleBuilder != null) ...{
                       configuration.titleBuilder!(
                         context,
-                        configuration.translations.cartTitle,
+                        configuration.translations!.cartTitle,
                       ),
                     } else ...{
                       Padding(
@@ -40,7 +40,7 @@ class ShoppingCartScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              configuration.translations.cartTitle,
+                              configuration.translations!.cartTitle,
                               style: theme.textTheme.titleLarge,
                               textAlign: TextAlign.start,
                             ),
@@ -53,7 +53,7 @@ class ShoppingCartScreen extends StatelessWidget {
                       builder: (context, _) => Column(
                         children: [
                           for (var product in configuration.service.products)
-                            configuration.productItemBuilder(
+                            configuration.productItemBuilder!(
                               context,
                               product,
                               configuration,
@@ -63,8 +63,8 @@ class ShoppingCartScreen extends StatelessWidget {
                           // the bottom to make sure the last
                           // product(s) are not hidden by the bottom sheet.
                           SizedBox(
-                            height: configuration.confirmOrderButtonHeight +
-                                configuration.sumBottomSheetHeight,
+                            height: configuration.confirmOrderButtonHeight! +
+                                configuration.sumBottomSheetHeight!,
                           ),
                         ],
                       ),
@@ -100,11 +100,11 @@ class _BottomSheet extends StatelessWidget {
           ListenableBuilder(
             listenable: configuration.service,
             builder: (BuildContext context, Widget? child) =>
-                configuration.sumBottomSheetBuilder(context, configuration),
+                configuration.sumBottomSheetBuilder!(context, configuration),
           ),
           ListenableBuilder(
             listenable: configuration.service,
-            builder: (context, _) => configuration.confirmOrderButtonBuilder(
+            builder: (context, _) => configuration.confirmOrderButtonBuilder!(
               context,
               configuration,
               configuration.onConfirmOrder,

@@ -11,17 +11,27 @@ class ShoppingCartConfig {
   ShoppingCartConfig({
     required this.service,
     required this.onConfirmOrder,
-    this.productItemBuilder = _defaultProductItemBuilder,
-    this.confirmOrderButtonBuilder = _defaultConfirmOrderButton,
-    this.confirmOrderButtonHeight = 100,
-    this.sumBottomSheetBuilder = _defaultSumBottomSheetBuilder,
-    this.sumBottomSheetHeight = 100,
+    this.productItemBuilder,
+    this.confirmOrderButtonBuilder,
+    this.confirmOrderButtonHeight,
+    this.sumBottomSheetBuilder,
+    this.sumBottomSheetHeight,
     this.titleBuilder,
-    this.translations = const ShoppingCartTranslations(),
-    this.pagePadding = const EdgeInsets.symmetric(horizontal: 32),
-    this.bottomPadding = const EdgeInsets.fromLTRB(44, 0, 44, 32),
-    this.appBar = _defaultAppBar,
-  });
+    this.translations,
+    this.pagePadding,
+    this.bottomPadding,
+    this.appBar,
+  }) {
+    productItemBuilder ??= _defaultProductItemBuilder;
+    confirmOrderButtonBuilder ??= _defaultConfirmOrderButton;
+    sumBottomSheetBuilder ??= _defaultSumBottomSheetBuilder;
+    appBar ??= _defaultAppBar;
+    translations ??= const ShoppingCartTranslations();
+    pagePadding ??= const EdgeInsets.symmetric(horizontal: 32);
+    bottomPadding ??= const EdgeInsets.fromLTRB(44, 0, 44, 32);
+    confirmOrderButtonHeight ??= 100;
+    sumBottomSheetHeight ??= 100;
+  }
 
   /// Product service. The product service is used to manage the products in the
   /// shopping cart.
@@ -29,26 +39,26 @@ class ShoppingCartConfig {
 
   /// Product item builder. This builder is used to build the product item
   /// that will be displayed in the shopping cart.
-  final Widget Function(
+  Widget Function(
     BuildContext context,
     Product product,
     ShoppingCartConfig configuration,
-  ) productItemBuilder;
+  )? productItemBuilder;
 
   /// Confirm order button builder. This builder is used to build the confirm
   /// order button that will be displayed in the shopping cart.
   /// If you override this builder, you cannot use the [onConfirmOrder] callback
-  final Widget Function(
+  Widget Function(
     BuildContext context,
     ShoppingCartConfig configuration,
     Function(List<Product> products) onConfirmOrder,
-  ) confirmOrderButtonBuilder;
+  )? confirmOrderButtonBuilder;
 
   /// Confirm order button height. The height of the confirm order button.
   /// This height is used to calculate the bottom padding of the shopping cart.
   /// If you override the confirm order button builder, you must provide a
   /// height.
-  final double confirmOrderButtonHeight;
+  double? confirmOrderButtonHeight;
 
   /// Confirm order callback. This callback is called when the confirm order
   /// button is pressed. The callback will not be called if you override the
@@ -58,22 +68,22 @@ class ShoppingCartConfig {
   /// Sum bottom sheet builder. This builder is used to build the sum bottom
   /// sheet that will be displayed in the shopping cart. The sum bottom sheet
   /// can be used to display the total sum of the products in the shopping cart.
-  final Widget Function(BuildContext context, ShoppingCartConfig configuration)
+  Widget Function(BuildContext context, ShoppingCartConfig configuration)?
       sumBottomSheetBuilder;
 
   /// Sum bottom sheet height. The height of the sum bottom sheet.
   /// This height is used to calculate the bottom padding of the shopping cart.
   /// If you override the sum bottom sheet builder, you must provide a height.
-  final double sumBottomSheetHeight;
+  double? sumBottomSheetHeight;
 
   /// Padding around the shopping cart. The padding is used to create space
   /// around the shopping cart.
-  final EdgeInsets pagePadding;
+  EdgeInsets? pagePadding;
 
   /// Bottom padding of the shopping cart. The bottom padding is used to create
   /// a padding around the bottom sheet. This padding is ignored when the
   /// [sumBottomSheetBuilder] is overridden.
-  final EdgeInsets bottomPadding;
+  EdgeInsets? bottomPadding;
 
   /// Title builder. This builder is used to
   /// build the title of the shopping cart.
@@ -83,10 +93,10 @@ class ShoppingCartConfig {
   )? titleBuilder;
 
   /// Shopping cart translations. The translations for the shopping cart.
-  final ShoppingCartTranslations translations;
+  ShoppingCartTranslations? translations;
 
   /// Appbar for the shopping cart screen.
-  final AppBar Function(BuildContext context) appBar;
+  AppBar Function(BuildContext context)? appBar;
 }
 
 Widget _defaultProductItemBuilder(
@@ -217,11 +227,11 @@ Widget _defaultSumBottomSheetBuilder(
   );
 
   return Padding(
-    padding: configuration.bottomPadding,
+    padding: configuration.bottomPadding!,
     child: Row(
       children: [
         Text(
-          configuration.translations.sum,
+          configuration.translations!.sum,
           style: theme.textTheme.titleMedium,
         ),
         const Spacer(),
@@ -261,7 +271,7 @@ Widget _defaultConfirmOrderButton(
             vertical: 12,
           ),
           child: Text(
-            configuration.translations.placeOrder,
+            configuration.translations!.placeOrder,
             style: theme.textTheme.displayLarge,
           ),
         ),

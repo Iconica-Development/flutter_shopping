@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_product_page/src/widgets/product_item.dart";
 import "package:flutter_product_page/src/widgets/product_item_popup.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
@@ -13,20 +14,31 @@ class ProductPageConfiguration {
     required this.onAddToCart,
     required this.onNavigateToShoppingCart,
     required this.getProductsInShoppingCart,
-    this.shoppingCartButtonBuilder = _defaultShoppingCartButtonBuilder,
+    this.shoppingCartButtonBuilder,
     this.initialShopId,
     this.productBuilder,
     this.onShopSelectionChange,
-    this.translations = const ProductPageTranslations(),
-    this.shopSelectorStyle = ShopSelectorStyle.spacedWrap,
-    this.pagePadding = const EdgeInsets.all(4),
-    this.appBar = _defaultAppBar,
+    this.translations,
+    this.shopSelectorStyle,
+    this.pagePadding,
+    this.appBar,
     this.bottomNavigationBar,
-    this.onProductDetail = _onProductDetail,
-    this.discountDescription = _defaultDiscountDescription,
-    this.noContentBuilder = _defaultNoContentBuilder,
-    this.errorBuilder = _defaultErrorBuilder,
-  });
+    this.onProductDetail,
+    this.discountDescription,
+    this.noContentBuilder,
+    this.errorBuilder,
+  }) {
+    shoppingCartButtonBuilder ??= _defaultShoppingCartButtonBuilder;
+    productBuilder ??= _defaultProductBuilder;
+    appBar ??= _defaultAppBar;
+    onProductDetail ??= _onProductDetail;
+    discountDescription ??= _defaultDiscountDescription;
+    noContentBuilder ??= _defaultNoContentBuilder;
+    errorBuilder ??= _defaultErrorBuilder;
+    translations ??= const ProductPageTranslations();
+    shopSelectorStyle ??= ShopSelectorStyle.row;
+    pagePadding ??= const EdgeInsets.all(4);
+  }
 
   /// The shopping service that is used
   final ShoppingService shoppingService;
@@ -42,32 +54,36 @@ class ProductPageConfiguration {
   final Future<List<Product>> Function(Shop shop) getProducts;
 
   /// The localizations for the product page.
-  final ProductPageTranslations translations;
+  ProductPageTranslations? translations;
 
   /// Builder for the product item. These items will be displayed in the list
   /// for each product in their seperated category. This builder should only
   /// build the widget for one specific product. This builder has a default
   /// in-case the developer does not override it.
-  Widget Function(BuildContext context, Product product)? productBuilder;
+  Widget Function(
+    BuildContext context,
+    Product product,
+    ProductPageConfiguration configuration,
+  )? productBuilder;
 
   /// The builder for the product popup. This builder should return a widget
   Function(
     BuildContext context,
     Product product,
     String closeText,
-  ) onProductDetail;
+  )? onProductDetail;
 
   /// The builder for the shopping cart. This builder should return a widget
   /// that navigates to the shopping cart overview page.
   Widget Function(
     BuildContext context,
     ProductPageConfiguration configuration,
-  ) shoppingCartButtonBuilder;
+  )? shoppingCartButtonBuilder;
 
   /// The function that returns the discount description for a product.
   String Function(
     Product product,
-  ) discountDescription;
+  )? discountDescription;
 
   /// This function must be implemented by the developer and should handle the
   /// adding of a product to the cart.
@@ -86,20 +102,20 @@ class ProductPageConfiguration {
   final Function() onNavigateToShoppingCart;
 
   /// The style of the shop selector.
-  final ShopSelectorStyle shopSelectorStyle;
+  ShopSelectorStyle? shopSelectorStyle;
 
   /// The padding for the page.
-  final EdgeInsets pagePadding;
+  EdgeInsets? pagePadding;
 
   /// Optional app bar that you can pass to the product page screen.
   final Widget? bottomNavigationBar;
 
   /// Optional app bar that you can pass to the order detail screen.
-  final AppBar Function(BuildContext context)? appBar;
+  AppBar Function(BuildContext context)? appBar;
 
   /// Builder for the no content widget. This builder is used when there is no
   /// content to display.
-  final Widget Function(
+  Widget Function(
     BuildContext context,
   )? noContentBuilder;
 
@@ -109,7 +125,7 @@ class ProductPageConfiguration {
     BuildContext context,
     Object? error,
     StackTrace? stackTrace,
-  ) errorBuilder;
+  )? errorBuilder;
 }
 
 AppBar _defaultAppBar(
@@ -157,7 +173,7 @@ Widget _defaultShoppingCartButtonBuilder(
               vertical: 12,
             ),
             child: Text(
-              configuration.translations.navigateToShoppingCart,
+              configuration.translations!.navigateToShoppingCart,
               style: theme.textTheme.displayLarge,
             ),
           ),
@@ -214,3 +230,15 @@ Widget _defaultErrorBuilder(
     ),
   );
 }
+
+Widget _defaultProductBuilder(
+  BuildContext context,
+  Product product,
+  ProductPageConfiguration configuration,
+) =>
+    ProductItem(
+      product: product,
+      onProductDetail: configuration.onProductDetail!,
+      onAddToCart: (Product product) => configuration.onAddToCart(product),
+      translations: configuration.translations!,
+    );

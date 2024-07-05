@@ -23,11 +23,11 @@ class ProductPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: configuration.appBar!.call(context),
+        appBar: configuration.appBar?.call(context),
         bottomNavigationBar: configuration.bottomNavigationBar,
         body: SafeArea(
           child: Padding(
-            padding: configuration.pagePadding,
+            padding: configuration.pagePadding!,
             child: FutureBuilder(
               // ignore: discarded_futures
               future: configuration.shops(),
@@ -43,7 +43,7 @@ class ProductPageScreen extends StatelessWidget {
                 }
 
                 if (data.hasError) {
-                  return configuration.errorBuilder(
+                  return configuration.errorBuilder!(
                     context,
                     data.error,
                     data.stackTrace,
@@ -53,7 +53,7 @@ class ProductPageScreen extends StatelessWidget {
                 List<Shop>? shops = data.data;
 
                 if (shops == null || shops.isEmpty) {
-                  return configuration.errorBuilder(context, null, null);
+                  return configuration.errorBuilder!(context, null, null);
                 }
 
                 if (initialBuildShopId != null) {
@@ -137,7 +137,7 @@ class _ProductPage extends StatelessWidget {
         pageContent,
         Align(
           alignment: Alignment.bottomCenter,
-          child: configuration.shoppingCartButtonBuilder(
+          child: configuration.shoppingCartButtonBuilder!(
             context,
             configuration,
           ),
@@ -159,7 +159,7 @@ class _ShopContents extends StatelessWidget {
     var theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: configuration.pagePadding.horizontal,
+        horizontal: configuration.pagePadding!.horizontal,
       ),
       child: FutureBuilder(
         // ignore: discarded_futures
@@ -172,7 +172,7 @@ class _ShopContents extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return configuration.errorBuilder(
+            return configuration.errorBuilder!(
               context,
               snapshot.error,
               snapshot.stackTrace,

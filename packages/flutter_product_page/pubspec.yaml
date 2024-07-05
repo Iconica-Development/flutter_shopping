@@ -23,10 +23,6 @@ dependencies:
   collection: ^1.18.0
   provider: ^6.1.2
 
-dependency_overrides:
-  flutter_shopping_interface:
-    path: ../flutter_shopping_interface
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

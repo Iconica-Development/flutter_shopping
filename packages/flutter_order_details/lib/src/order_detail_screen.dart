@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_form_wizard/flutter_form.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
 
 /// Order Detail Screen.
@@ -22,22 +21,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget build(BuildContext context) {
     var controller = FlutterFormController();
     return Scaffold(
-      appBar: widget.configuration.appBar.call(
+      appBar: widget.configuration.appBar!.call(
         context,
-        widget.configuration.translations.orderDetailsTitle,
+        widget.configuration.translations!.orderDetailsTitle,
       ),
       body: FlutterForm(
         formController: controller,
         options: FlutterFormOptions(
           nextButton: (pageNumber, checkingPages) =>
-              widget.configuration.nextbuttonBuilder(
+              widget.configuration.nextbuttonBuilder!(
             pageNumber,
             checkingPages,
             context,
             widget.configuration,
             controller,
           ),
-          pages: widget.configuration.pages.call(context),
+          pages: widget.configuration.pages!.call(context),
           onFinished: (data) async {
             widget.configuration.onStepsCompleted.call(
               widget.configuration.shoppingService.shopService.selectedShop!.id,
@@ -47,7 +46,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             );
           },
           onNext: (step, data) {
-            widget.configuration.onNextStep.call(step, data);
+            
           },
         ),
       ),
