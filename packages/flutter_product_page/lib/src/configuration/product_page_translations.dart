@@ -6,6 +6,8 @@ class ProductPageTranslations {
     this.discountTitle = "Weekly offer",
     this.failedToLoadImageExplenation = "Failed to load image",
     this.close = "Close",
+    this.categoryItemListTitle = "What would you like to order",
+    this.appBarTitle = "ProductPage",
   });
 
   /// Message to navigate to the shopping cart
@@ -19,4 +21,10 @@ class ProductPageTranslations {
 
   /// Close button for the product page
   final String close;
+
+  /// Title for the category item list
+  final String categoryItemListTitle;
+
+  /// Title for the app bar
+  final String appBarTitle;
 }

@@ -35,13 +35,6 @@ dependencies:
       url: https://github.com/Iconica-Development/flutter_shopping
       ref: 2.0.0
       path: packages/flutter_shopping_local
-dependency_overrides:
-  flutter_product_page:
-    path: ../flutter_product_page
-  flutter_shopping_cart:
-    path: ../flutter_shopping_cart
-  flutter_order_details:
-    path: ../flutter_order_details
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,16 @@
 import "package:flutter/material.dart";
+import "package:flutter_product_page/flutter_product_page.dart";
 
 /// Default appbar for the product page.
 class DefaultAppbar extends StatelessWidget implements PreferredSizeWidget {
   /// Constructor for the default appbar for the product page.
   const DefaultAppbar({
+    required this.configuration,
     super.key,
   });
+
+  /// Configuration for the product page.
+  final ProductPageConfiguration configuration;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class DefaultAppbar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt)),
       ],
       title: Text(
-        "Product page",
+        configuration.translations.appBarTitle,
         style: theme.textTheme.headlineLarge,
       ),
     );

@@ -27,8 +27,10 @@ class ProductPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar:
-            configuration.appBarBuilder?.call(context) ?? const DefaultAppbar(),
+        appBar: configuration.appBarBuilder?.call(context) ??
+            DefaultAppbar(
+              configuration: configuration,
+            ),
         bottomNavigationBar: configuration.bottomNavigationBar,
         body: SafeArea(
           child: Padding(
@@ -129,11 +131,17 @@ class _ProductPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ShopSelector(
-            configuration: configuration,
-            shops: shops,
-            onTap: configuration.shoppingService.shopService.selectShop,
-          ),
+          configuration.shopselectorBuilder?.call(
+                context,
+                configuration,
+                shops,
+                configuration.shoppingService.shopService.selectShop,
+              ) ??
+              ShopSelector(
+                configuration: configuration,
+                shops: shops,
+                onTap: configuration.shoppingService.shopService.selectShop,
+              ),
           _ShopContents(
             configuration: configuration,
           ),
@@ -207,6 +215,7 @@ class _ShopContents extends StatelessWidget {
             child: Column(
               children: [
                 // Products
+
                 getCategoryList(
                   context,
                   configuration,
@@ -227,25 +236,35 @@ class _ShopContents extends StatelessWidget {
             children: [
               // Discounted product
               if (discountedproducts.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: WeeklyDiscount(
-                    configuration: configuration,
-                    product: discountedproducts.first,
-                  ),
-                ),
+                configuration.discountBuilder?.call(
+                      context,
+                      configuration,
+                      discountedproducts,
+                    ) ??
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: WeeklyDiscount(
+                        configuration: configuration,
+                        product: discountedproducts.first,
+                      ),
+                    ),
               ],
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                 child: Text(
-                  "What would you like to order?",
+                  configuration.translations.categoryItemListTitle,
                   style: theme.textTheme.titleLarge,
                   textAlign: TextAlign.start,
                 ),
               ),
 
-              productList,
+              configuration.categoryListBuilder?.call(
+                    context,
+                    configuration,
+                    productPageContent,
+                  ) ??
+                  productList,
             ],
           );
         },

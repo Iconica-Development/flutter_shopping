@@ -26,6 +26,9 @@ class ShoppingConfiguration {
     this.discountDescription,
     this.noContentBuilder,
     this.errorBuilder,
+    this.categoryListBuilder,
+    this.shopselectorBuilder,
+    this.discountBuilder,
 
     /// ShoppingCart configurations
     this.onConfirmOrder,
@@ -114,6 +117,30 @@ class ShoppingConfiguration {
   /// Function that will be called when there is an error
   final Widget Function(BuildContext, Object?)? errorBuilder;
 
+  /// Builder for the shop selector. This builder is used to build the shop
+  /// selector that will be displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Shop> shops,
+    Function(Shop shop) onShopSelectionChange,
+  )? shopselectorBuilder;
+
+  /// Builder for the discount widget. This builder is used to build the
+  /// discount widget that will be displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Product> discountedProducts,
+  )? discountBuilder;
+
+  /// Builder for the list of items that are displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Product> products,
+  )? categoryListBuilder;
+
   /// Function that will be called when the order button on
   /// the shopping cart page is pressed
   final Function(List<Product>)? onConfirmOrder;
@@ -161,12 +188,6 @@ class ShoppingConfiguration {
 
   /// Shopping cart app bar builder
   final AppBar Function(BuildContext)? shoppingCartAppBarBuilder;
-
-  // = _defaultPages,
-// = const OrderDetailTranslations(),
-// = _defaultAppBar,
-//  = _defaultNextButtonBuilder,
-// = _defaultOrderSuccess,
 
   /// Function that gets called when the user navigates to the next
   /// step of the order details

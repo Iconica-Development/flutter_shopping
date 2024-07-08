@@ -52,6 +52,9 @@ class ShoppingProductPage extends StatelessWidget {
         discountDescription: shoppingConfiguration.discountDescription,
         noContentBuilder: shoppingConfiguration.noContentBuilder,
         errorBuilder: shoppingConfiguration.errorBuilder,
+        shopselectorBuilder: shoppingConfiguration.shopselectorBuilder,
+        discountBuilder: shoppingConfiguration.discountBuilder,
+        categoryListBuilder: shoppingConfiguration.categoryListBuilder,
         shops: () async {
           if (shoppingConfiguration.onGetShops != null) {
             return shoppingConfiguration.onGetShops!();

@@ -26,6 +26,9 @@ class ProductPageConfiguration {
     this.discountDescription,
     this.noContentBuilder,
     this.errorBuilder,
+    this.shopselectorBuilder,
+    this.discountBuilder,
+    this.categoryListBuilder,
   }) {
     onProductDetail ??= _onProductDetail;
     discountDescription ??= _defaultDiscountDescription;
@@ -45,13 +48,13 @@ class ProductPageConfiguration {
   final Future<List<Product>> Function(Shop shop) getProducts;
 
   /// The localizations for the product page.
-  ProductPageTranslations translations;
+  final ProductPageTranslations translations;
 
   /// Builder for the product item. These items will be displayed in the list
   /// for each product in their seperated category. This builder should only
   /// build the widget for one specific product. This builder has a default
   /// in-case the developer does not override it.
-  Widget Function(
+  final Widget Function(
     BuildContext context,
     Product product,
     ProductPageConfiguration configuration,
@@ -66,7 +69,7 @@ class ProductPageConfiguration {
 
   /// The builder for the shopping cart. This builder should return a widget
   /// that navigates to the shopping cart overview page.
-  Widget Function(
+  final Widget Function(
     BuildContext context,
     ProductPageConfiguration configuration,
   )? shoppingCartButtonBuilder;
@@ -93,29 +96,53 @@ class ProductPageConfiguration {
   final Function() onNavigateToShoppingCart;
 
   /// The style of the shop selector.
-  ShopSelectorStyle shopSelectorStyle;
+  final ShopSelectorStyle shopSelectorStyle;
 
   /// The padding for the page.
-  EdgeInsets pagePadding;
+  final EdgeInsets pagePadding;
 
   /// Optional app bar that you can pass to the product page screen.
   final Widget? bottomNavigationBar;
 
   /// Optional app bar that you can pass to the order detail screen.
-  PreferredSizeWidget Function(BuildContext context)? appBarBuilder;
+  final PreferredSizeWidget Function(BuildContext context)? appBarBuilder;
 
   /// Builder for the no content widget. This builder is used when there is no
   /// content to display.
-  Widget Function(
+  final Widget Function(
     BuildContext context,
   )? noContentBuilder;
 
   /// Builder for the error widget. This builder is used when there is an error
   /// to display.
-  Widget Function(
+  final Widget Function(
     BuildContext context,
     Object? error,
   )? errorBuilder;
+
+  /// Builder for the shop selector. This builder is used to build the shop
+  /// selector that will be displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Shop> shops,
+    Function(Shop shop) onShopSelectionChange,
+  )? shopselectorBuilder;
+
+  /// Builder for the discount widget. This builder is used to build the
+  /// discount widget that will be displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Product> discountedProducts,
+  )? discountBuilder;
+
+  /// Builder for the list of items that are displayed in the product page.
+  final Widget Function(
+    BuildContext context,
+    ProductPageConfiguration configuration,
+    List<Product> products,
+  )? categoryListBuilder;
 }
 
 Future<void> _onProductDetail(
