@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_product_page/src/services/category_service.dart";
+import "package:flutter_product_page/src/widgets/defaults/default_appbar.dart";
+import "package:flutter_product_page/src/widgets/defaults/default_error.dart";
+import "package:flutter_product_page/src/widgets/defaults/default_no_content.dart";
+import "package:flutter_product_page/src/widgets/defaults/default_shopping_cart_button.dart";
 import "package:flutter_product_page/src/widgets/shop_selector.dart";
 import "package:flutter_product_page/src/widgets/weekly_discount.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
@@ -23,11 +27,12 @@ class ProductPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: configuration.appBar?.call(context),
+        appBar:
+            configuration.appBarBuilder?.call(context) ?? const DefaultAppbar(),
         bottomNavigationBar: configuration.bottomNavigationBar,
         body: SafeArea(
           child: Padding(
-            padding: configuration.pagePadding!,
+            padding: configuration.pagePadding,
             child: FutureBuilder(
               // ignore: discarded_futures
               future: configuration.shops(),
@@ -43,17 +48,21 @@ class ProductPageScreen extends StatelessWidget {
                 }
 
                 if (data.hasError) {
-                  return configuration.errorBuilder!(
-                    context,
-                    data.error,
-                    data.stackTrace,
-                  );
+                  return configuration.errorBuilder?.call(
+                        context,
+                        data.error,
+                      ) ??
+                      DefaultError(error: data.error);
                 }
 
                 List<Shop>? shops = data.data;
 
                 if (shops == null || shops.isEmpty) {
-                  return configuration.errorBuilder!(context, null, null);
+                  return configuration.errorBuilder?.call(
+                        context,
+                        data.error,
+                      ) ??
+                      DefaultError(error: data.error);
                 }
 
                 if (initialBuildShopId != null) {
@@ -137,10 +146,14 @@ class _ProductPage extends StatelessWidget {
         pageContent,
         Align(
           alignment: Alignment.bottomCenter,
-          child: configuration.shoppingCartButtonBuilder!(
-            context,
-            configuration,
-          ),
+          child: configuration.shoppingCartButtonBuilder != null
+              ? configuration.shoppingCartButtonBuilder!(
+                  context,
+                  configuration,
+                )
+              : DefaultShoppingCartButton(
+                  configuration: configuration,
+                ),
         ),
       ],
     );
@@ -159,7 +172,7 @@ class _ShopContents extends StatelessWidget {
     var theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: configuration.pagePadding!.horizontal,
+        horizontal: configuration.pagePadding.horizontal,
       ),
       child: FutureBuilder(
         // ignore: discarded_futures
@@ -172,17 +185,21 @@ class _ShopContents extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return configuration.errorBuilder!(
-              context,
-              snapshot.error,
-              snapshot.stackTrace,
-            );
+            if (configuration.errorBuilder != null) {
+              return configuration.errorBuilder!(
+                context,
+                snapshot.error,
+              );
+            } else {
+              return DefaultError(error: snapshot.error);
+            }
           }
 
           var productPageContent = snapshot.data;
 
           if (productPageContent == null || productPageContent.isEmpty) {
-            return configuration.noContentBuilder!(context);
+            return configuration.noContentBuilder?.call(context) ??
+                const DefaultNoContent();
           }
 
           var productList = Padding(

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_nested_categories/flutter_nested_categories.dart";
 import "package:flutter_product_page/flutter_product_page.dart";
+import "package:flutter_product_page/src/widgets/defaults/default_product_item.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Generates a [CategoryList] from a list of [Product]s and a
@@ -25,7 +26,14 @@ Widget getCategoryList(
     var productWidgets = productList
         .map(
           (product) =>
-              configuration.productBuilder!(context, product, configuration),
+              configuration.productBuilder
+                  ?.call(context, product, configuration) ??
+              DefaultProductItem(
+                product: product,
+                onAddToCart: configuration.onAddToCart,
+                onProductDetail: configuration.onProductDetail!,
+                translations: configuration.translations,
+              ),
         )
         .toList();
     var category = Category(

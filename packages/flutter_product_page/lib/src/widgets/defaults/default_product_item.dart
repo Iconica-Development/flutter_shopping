@@ -5,9 +5,9 @@ import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 import "package:skeletonizer/skeletonizer.dart";
 
 /// Product item widget.
-class ProductItem extends StatelessWidget {
+class DefaultProductItem extends StatelessWidget {
   /// Constructor for the product item widget.
-  const ProductItem({
+  const DefaultProductItem({
     required this.product,
     required this.onProductDetail,
     required this.onAddToCart,

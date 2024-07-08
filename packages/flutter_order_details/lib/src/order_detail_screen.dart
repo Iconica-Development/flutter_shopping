@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
+import "package:flutter_order_details/src/widgets/default_appbar.dart";
+import "package:flutter_order_details/src/widgets/default_next_button.dart";
+import "package:flutter_order_details/src/widgets/default_order_detail_pages.dart";
 
 /// Order Detail Screen.
 class OrderDetailScreen extends StatefulWidget {
@@ -21,22 +24,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget build(BuildContext context) {
     var controller = FlutterFormController();
     return Scaffold(
-      appBar: widget.configuration.appBar!.call(
-        context,
-        widget.configuration.translations!.orderDetailsTitle,
-      ),
+      appBar: widget.configuration.appBarBuilder?.call(
+            context,
+            widget.configuration.translations.orderDetailsTitle,
+          ) ??
+          DefaultAppbar(
+            title: widget.configuration.translations.orderDetailsTitle,
+          ),
       body: FlutterForm(
         formController: controller,
         options: FlutterFormOptions(
           nextButton: (pageNumber, checkingPages) =>
-              widget.configuration.nextbuttonBuilder!(
-            pageNumber,
-            checkingPages,
-            context,
-            widget.configuration,
-            controller,
-          ),
-          pages: widget.configuration.pages!.call(context),
+              widget.configuration.nextbuttonBuilder?.call(
+                pageNumber,
+                checkingPages,
+                context,
+                widget.configuration,
+                controller,
+              ) ??
+              DefaultNextButton(
+                controller: controller,
+                configuration: widget.configuration,
+                currentStep: pageNumber,
+                checkingPages: checkingPages,
+              ),
+          pages: widget.configuration.pages?.call(context) ??
+              defaultPages(context),
           onFinished: (data) async {
             widget.configuration.onStepsCompleted.call(
               widget.configuration.shoppingService.shopService.selectedShop!.id,
@@ -45,9 +58,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               widget.configuration,
             );
           },
-          onNext: (step, data) {
-            
-          },
+          onNext: (step, data) {},
         ),
       ),
     );

@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
-import "package:flutter_shopping_cart/src/widgets/product_item_popup.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Shopping cart configuration
@@ -13,25 +12,15 @@ class ShoppingCartConfig {
     required this.onConfirmOrder,
     this.productItemBuilder,
     this.confirmOrderButtonBuilder,
-    this.confirmOrderButtonHeight,
+    this.confirmOrderButtonHeight = 100,
     this.sumBottomSheetBuilder,
-    this.sumBottomSheetHeight,
+    this.sumBottomSheetHeight = 100,
     this.titleBuilder,
-    this.translations,
-    this.pagePadding,
-    this.bottomPadding,
-    this.appBar,
-  }) {
-    productItemBuilder ??= _defaultProductItemBuilder;
-    confirmOrderButtonBuilder ??= _defaultConfirmOrderButton;
-    sumBottomSheetBuilder ??= _defaultSumBottomSheetBuilder;
-    appBar ??= _defaultAppBar;
-    translations ??= const ShoppingCartTranslations();
-    pagePadding ??= const EdgeInsets.symmetric(horizontal: 32);
-    bottomPadding ??= const EdgeInsets.fromLTRB(44, 0, 44, 32);
-    confirmOrderButtonHeight ??= 100;
-    sumBottomSheetHeight ??= 100;
-  }
+    this.translations = const ShoppingCartTranslations(),
+    this.pagePadding = const EdgeInsets.symmetric(horizontal: 32),
+    this.bottomPadding = const EdgeInsets.fromLTRB(44, 0, 44, 32),
+    this.appBarBuilder,
+  });
 
   /// Product service. The product service is used to manage the products in the
   /// shopping cart.
@@ -58,7 +47,7 @@ class ShoppingCartConfig {
   /// This height is used to calculate the bottom padding of the shopping cart.
   /// If you override the confirm order button builder, you must provide a
   /// height.
-  double? confirmOrderButtonHeight;
+  double confirmOrderButtonHeight;
 
   /// Confirm order callback. This callback is called when the confirm order
   /// button is pressed. The callback will not be called if you override the
@@ -74,16 +63,16 @@ class ShoppingCartConfig {
   /// Sum bottom sheet height. The height of the sum bottom sheet.
   /// This height is used to calculate the bottom padding of the shopping cart.
   /// If you override the sum bottom sheet builder, you must provide a height.
-  double? sumBottomSheetHeight;
+  double sumBottomSheetHeight;
 
   /// Padding around the shopping cart. The padding is used to create space
   /// around the shopping cart.
-  EdgeInsets? pagePadding;
+  EdgeInsets pagePadding;
 
   /// Bottom padding of the shopping cart. The bottom padding is used to create
   /// a padding around the bottom sheet. This padding is ignored when the
   /// [sumBottomSheetBuilder] is overridden.
-  EdgeInsets? bottomPadding;
+  EdgeInsets bottomPadding;
 
   /// Title builder. This builder is used to
   /// build the title of the shopping cart.
@@ -93,199 +82,8 @@ class ShoppingCartConfig {
   )? titleBuilder;
 
   /// Shopping cart translations. The translations for the shopping cart.
-  ShoppingCartTranslations? translations;
+  ShoppingCartTranslations translations;
 
   /// Appbar for the shopping cart screen.
-  AppBar Function(BuildContext context)? appBar;
-}
-
-Widget _defaultProductItemBuilder(
-  BuildContext context,
-  Product product,
-  ShoppingCartConfig configuration,
-) {
-  var theme = Theme.of(context);
-  return ListenableBuilder(
-    listenable: configuration.service,
-    builder: (context, _) => Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: ListTile(
-        contentPadding: const EdgeInsets.only(top: 3, left: 4, bottom: 3),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              product.name,
-              style: theme.textTheme.titleMedium,
-            ),
-            IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              onPressed: () async {
-                await showModalBottomSheet(
-                  context: context,
-                  backgroundColor: theme.colorScheme.surface,
-                  builder: (context) => ProductItemPopup(
-                    product: product,
-                    configuration: configuration,
-                  ),
-                );
-              },
-              icon: Icon(
-                Icons.info_outline,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-        leading: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Image.network(
-            product.imageUrl,
-          ),
-        ),
-        trailing: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (product.hasDiscount && product.discountPrice != null) ...[
-                  Text(
-                    product.discountPrice!.toStringAsFixed(2),
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ] else ...[
-                  Text(
-                    product.price.toStringAsFixed(2),
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(
-                    Icons.remove,
-                    color: Colors.black,
-                  ),
-                  onPressed: () =>
-                      configuration.service.removeOneProduct(product),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    height: 30,
-                    width: 30,
-                    child: Text(
-                      "${product.quantity}",
-                      style: theme.textTheme.titleSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    configuration.service.addProduct(product);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _defaultSumBottomSheetBuilder(
-  BuildContext context,
-  ShoppingCartConfig configuration,
-) {
-  var theme = Theme.of(context);
-
-  var totalPrice = configuration.service.products.fold<double>(
-    0,
-    (previousValue, element) =>
-        previousValue +
-        (element.discountPrice ?? element.price) * element.quantity,
-  );
-
-  return Padding(
-    padding: configuration.bottomPadding!,
-    child: Row(
-      children: [
-        Text(
-          configuration.translations!.sum,
-          style: theme.textTheme.titleMedium,
-        ),
-        const Spacer(),
-        Text(
-          "€ ${totalPrice.toStringAsFixed(2)}",
-          style: theme.textTheme.bodyMedium,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _defaultConfirmOrderButton(
-  BuildContext context,
-  ShoppingCartConfig configuration,
-  Function(List<Product> products) onConfirmOrder,
-) {
-  var theme = Theme.of(context);
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 60),
-    child: SizedBox(
-      width: double.infinity,
-      child: FilledButton(
-        onPressed: configuration.service.products.isEmpty
-            ? null
-            : () => onConfirmOrder(
-                  configuration.service.products,
-                ),
-        style: theme.filledButtonTheme.style?.copyWith(
-          backgroundColor: WidgetStateProperty.all(
-            theme.colorScheme.primary,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 12,
-          ),
-          child: Text(
-            configuration.translations!.placeOrder,
-            style: theme.textTheme.displayLarge,
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-AppBar _defaultAppBar(BuildContext context) {
-  var theme = Theme.of(context);
-  return AppBar(
-    title: Text(
-      "Shopping cart",
-      style: theme.textTheme.headlineLarge,
-    ),
-  );
+  PreferredSizeWidget Function(BuildContext context)? appBarBuilder;
 }

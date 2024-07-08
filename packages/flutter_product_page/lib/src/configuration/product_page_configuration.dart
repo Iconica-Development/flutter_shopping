@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_product_page/flutter_product_page.dart";
-import "package:flutter_product_page/src/widgets/product_item.dart";
 import "package:flutter_product_page/src/widgets/product_item_popup.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
@@ -18,26 +17,18 @@ class ProductPageConfiguration {
     this.initialShopId,
     this.productBuilder,
     this.onShopSelectionChange,
-    this.translations,
-    this.shopSelectorStyle,
-    this.pagePadding,
-    this.appBar,
+    this.translations = const ProductPageTranslations(),
+    this.shopSelectorStyle = ShopSelectorStyle.row,
+    this.pagePadding = const EdgeInsets.all(4),
+    this.appBarBuilder,
     this.bottomNavigationBar,
     this.onProductDetail,
     this.discountDescription,
     this.noContentBuilder,
     this.errorBuilder,
   }) {
-    shoppingCartButtonBuilder ??= _defaultShoppingCartButtonBuilder;
-    productBuilder ??= _defaultProductBuilder;
-    appBar ??= _defaultAppBar;
     onProductDetail ??= _onProductDetail;
     discountDescription ??= _defaultDiscountDescription;
-    noContentBuilder ??= _defaultNoContentBuilder;
-    errorBuilder ??= _defaultErrorBuilder;
-    translations ??= const ProductPageTranslations();
-    shopSelectorStyle ??= ShopSelectorStyle.row;
-    pagePadding ??= const EdgeInsets.all(4);
   }
 
   /// The shopping service that is used
@@ -54,7 +45,7 @@ class ProductPageConfiguration {
   final Future<List<Product>> Function(Shop shop) getProducts;
 
   /// The localizations for the product page.
-  ProductPageTranslations? translations;
+  ProductPageTranslations translations;
 
   /// Builder for the product item. These items will be displayed in the list
   /// for each product in their seperated category. This builder should only
@@ -102,16 +93,16 @@ class ProductPageConfiguration {
   final Function() onNavigateToShoppingCart;
 
   /// The style of the shop selector.
-  ShopSelectorStyle? shopSelectorStyle;
+  ShopSelectorStyle shopSelectorStyle;
 
   /// The padding for the page.
-  EdgeInsets? pagePadding;
+  EdgeInsets pagePadding;
 
   /// Optional app bar that you can pass to the product page screen.
   final Widget? bottomNavigationBar;
 
   /// Optional app bar that you can pass to the order detail screen.
-  AppBar Function(BuildContext context)? appBar;
+  PreferredSizeWidget Function(BuildContext context)? appBarBuilder;
 
   /// Builder for the no content widget. This builder is used when there is no
   /// content to display.
@@ -124,63 +115,7 @@ class ProductPageConfiguration {
   Widget Function(
     BuildContext context,
     Object? error,
-    StackTrace? stackTrace,
   )? errorBuilder;
-}
-
-AppBar _defaultAppBar(
-  BuildContext context,
-) {
-  var theme = Theme.of(context);
-
-  return AppBar(
-    leading: IconButton(onPressed: () {}, icon: const Icon(Icons.person)),
-    actions: [
-      IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt)),
-    ],
-    title: Text(
-      "Product page",
-      style: theme.textTheme.headlineLarge,
-    ),
-  );
-}
-
-Widget _defaultShoppingCartButtonBuilder(
-  BuildContext context,
-  ProductPageConfiguration configuration,
-) {
-  var theme = Theme.of(context);
-
-  return ListenableBuilder(
-    listenable: configuration.shoppingService.shoppingCartService,
-    builder: (context, widget) => Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 60),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: configuration
-                  .shoppingService.shoppingCartService.products.isNotEmpty
-              ? configuration.onNavigateToShoppingCart
-              : null,
-          style: theme.filledButtonTheme.style?.copyWith(
-            backgroundColor: WidgetStateProperty.all(
-              theme.colorScheme.primary,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12,
-            ),
-            child: Text(
-              configuration.translations!.navigateToShoppingCart,
-              style: theme.textTheme.displayLarge,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
 }
 
 Future<void> _onProductDetail(
@@ -204,41 +139,3 @@ String _defaultDiscountDescription(
   Product product,
 ) =>
     "${product.name}, now for ${product.discountPrice} each";
-
-Widget _defaultNoContentBuilder(
-  BuildContext context,
-) {
-  var theme = Theme.of(context);
-  return Center(
-    child: Text(
-      "No content",
-      style: theme.textTheme.titleLarge,
-    ),
-  );
-}
-
-Widget _defaultErrorBuilder(
-  BuildContext context,
-  Object? error,
-  StackTrace? stackTrace,
-) {
-  var theme = Theme.of(context);
-  return Center(
-    child: Text(
-      "Error: $error",
-      style: theme.textTheme.titleLarge,
-    ),
-  );
-}
-
-Widget _defaultProductBuilder(
-  BuildContext context,
-  Product product,
-  ProductPageConfiguration configuration,
-) =>
-    ProductItem(
-      product: product,
-      onProductDetail: configuration.onProductDetail!,
-      onAddToCart: (Product product) => configuration.onAddToCart(product),
-      translations: configuration.translations!,
-    );

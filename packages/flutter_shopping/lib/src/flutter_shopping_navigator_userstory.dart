@@ -40,10 +40,13 @@ class ShoppingProductPage extends StatelessWidget {
             shoppingConfiguration.shoppingCartButtonBuilder,
         productBuilder: shoppingConfiguration.productBuilder,
         onShopSelectionChange: shoppingConfiguration.onShopSelectionChange,
-        translations: shoppingConfiguration.productPageTranslations,
-        shopSelectorStyle: shoppingConfiguration.shopSelectorStyle,
-        pagePadding: shoppingConfiguration.productPagePagePadding,
-        appBar: shoppingConfiguration.productPageAppBarBuilder,
+        translations: shoppingConfiguration.productPageTranslations ??
+            const ProductPageTranslations(),
+        shopSelectorStyle:
+            shoppingConfiguration.shopSelectorStyle ?? ShopSelectorStyle.row,
+        pagePadding: shoppingConfiguration.productPagePagePadding ??
+            const EdgeInsets.all(4),
+        appBarBuilder: shoppingConfiguration.productPageAppBarBuilder,
         bottomNavigationBar: shoppingConfiguration.bottomNavigationBarBuilder,
         onProductDetail: shoppingConfiguration.onProductDetail,
         discountDescription: shoppingConfiguration.discountDescription,
@@ -114,14 +117,17 @@ class ShoppingCart extends StatelessWidget {
         confirmOrderButtonBuilder:
             shoppingConfiguration.confirmOrderButtonBuilder,
         confirmOrderButtonHeight:
-            shoppingConfiguration.confirmOrderButtonHeight,
+            shoppingConfiguration.confirmOrderButtonHeight ?? 100,
         sumBottomSheetBuilder: shoppingConfiguration.sumBottomSheetBuilder,
-        sumBottomSheetHeight: shoppingConfiguration.sumBottomSheetHeight,
+        sumBottomSheetHeight: shoppingConfiguration.sumBottomSheetHeight ?? 100,
         titleBuilder: shoppingConfiguration.titleBuilder,
-        translations: shoppingConfiguration.shoppingCartTranslations,
-        pagePadding: shoppingConfiguration.shoppingCartPagePadding,
-        bottomPadding: shoppingConfiguration.shoppingCartBottomPadding,
-        appBar: shoppingConfiguration.shoppingCartAppBarBuilder,
+        translations: shoppingConfiguration.shoppingCartTranslations ??
+            const ShoppingCartTranslations(),
+        pagePadding: shoppingConfiguration.shoppingCartPagePadding ??
+            const EdgeInsets.symmetric(horizontal: 32),
+        bottomPadding: shoppingConfiguration.shoppingCartBottomPadding ??
+            const EdgeInsets.fromLTRB(44, 0, 44, 32),
+        appBarBuilder: shoppingConfiguration.shoppingCartAppBarBuilder,
         onConfirmOrder: (products) async {
           if (shoppingConfiguration.onConfirmOrder != null) {
             return shoppingConfiguration.onConfirmOrder!(products);
@@ -153,10 +159,17 @@ class ShoppingOrderDetails extends StatelessWidget {
         configuration: OrderDetailConfiguration(
           shoppingService: shoppingConfiguration.shoppingService,
           pages: shoppingConfiguration.pages,
-          translations: shoppingConfiguration.orderDetailTranslations,
-          appBar: shoppingConfiguration.orderDetailAppBarBuilder,
+          translations: shoppingConfiguration.orderDetailTranslations ??
+              const OrderDetailTranslations(),
+          appBarBuilder: shoppingConfiguration.orderDetailAppBarBuilder,
           nextbuttonBuilder: shoppingConfiguration.orderDetailNextbuttonBuilder,
-          orderSuccessBuilder: shoppingConfiguration.orderSuccessBuilder,
+          orderSuccessBuilder: (context, configuration, data) =>
+              shoppingConfiguration.orderSuccessBuilder
+                  ?.call(context, configuration, data) ??
+              DefaultOrderSucces(
+                configuration: configuration,
+                orderDetails: data,
+              ),
           onNextStep: (currentStep, data, controller) async {
             if (shoppingConfiguration.onNextStep != null) {
               return shoppingConfiguration.onNextStep!(

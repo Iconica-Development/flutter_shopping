@@ -50,7 +50,7 @@ class ProductItemPopup extends StatelessWidget {
                         vertical: 8.0,
                       ),
                       child: Text(
-                        configuration.translations!.close,
+                        configuration.translations.close,
                         style: theme.textTheme.displayLarge,
                       ),
                     ),

@@ -112,7 +112,7 @@ class ShoppingConfiguration {
   final Widget Function(BuildContext)? noContentBuilder;
 
   /// Function that will be called when there is an error
-  final Widget Function(BuildContext, Object?, StackTrace?)? errorBuilder;
+  final Widget Function(BuildContext, Object?)? errorBuilder;
 
   /// Function that will be called when the order button on
   /// the shopping cart page is pressed
@@ -210,7 +210,7 @@ class ShoppingConfiguration {
   )? orderDetailNextbuttonBuilder;
 
   /// The builder for the order success screen
-  final Widget Function(
+  final Widget? Function(
     BuildContext,
     OrderDetailConfiguration,
     Map<int, Map<String, dynamic>>,

@@ -51,7 +51,7 @@ class WeeklyDiscount extends StatelessWidget {
               Icons.error_outline_rounded,
               color: Colors.red,
             ),
-            Text(configuration.translations!.failedToLoadImageExplenation),
+            Text(configuration.translations.failedToLoadImageExplenation),
           ],
         ),
       ),
@@ -87,7 +87,7 @@ class WeeklyDiscount extends StatelessWidget {
             horizontal: 16,
           ),
           child: Text(
-            configuration.translations!.discountTitle,
+            configuration.translations.discountTitle,
             style: theme.textTheme.headlineSmall,
             textAlign: TextAlign.left,
           ),
