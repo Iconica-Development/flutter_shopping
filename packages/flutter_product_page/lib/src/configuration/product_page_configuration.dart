@@ -29,6 +29,7 @@ class ProductPageConfiguration {
     this.shopselectorBuilder,
     this.discountBuilder,
     this.categoryListBuilder,
+    this.selectedCategoryBuilder,
   }) {
     onProductDetail ??= _onProductDetail;
     discountDescription ??= _defaultDiscountDescription;
@@ -143,6 +144,10 @@ class ProductPageConfiguration {
     ProductPageConfiguration configuration,
     List<Product> products,
   )? categoryListBuilder;
+
+  /// Builder for the list of selected categories
+  final Widget Function(ProductPageConfiguration configuration)?
+      selectedCategoryBuilder;
 }
 
 Future<void> _onProductDetail(

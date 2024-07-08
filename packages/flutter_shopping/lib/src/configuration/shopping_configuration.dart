@@ -29,6 +29,7 @@ class ShoppingConfiguration {
     this.categoryListBuilder,
     this.shopselectorBuilder,
     this.discountBuilder,
+    this.selectedCategoryBuilder,
 
     /// ShoppingCart configurations
     this.onConfirmOrder,
@@ -56,6 +57,10 @@ class ShoppingConfiguration {
 
   /// The service that will be used for the userstory
   final ShoppingService shoppingService;
+
+  /// Builder for the list of selected categories
+  final Widget Function(ProductPageConfiguration configuration)?
+      selectedCategoryBuilder;
 
   /// Function that will be called when the products are requested
   final Future<List<Product>> Function(String shopId)? onGetProducts;

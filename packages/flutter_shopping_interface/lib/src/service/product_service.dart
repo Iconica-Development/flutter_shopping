@@ -14,4 +14,10 @@ abstract class ProductService with ChangeNotifier {
 
   /// Get current Products
   List<Product> get products;
+
+  /// Get current Products
+  List<String> get selectedCategories;
+
+  /// Select a category
+  void selectCategory(String category);
 }

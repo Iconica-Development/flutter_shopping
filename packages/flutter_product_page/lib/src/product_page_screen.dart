@@ -142,6 +142,12 @@ class _ProductPage extends StatelessWidget {
                 shops: shops,
                 onTap: configuration.shoppingService.shopService.selectShop,
               ),
+          configuration.selectedCategoryBuilder?.call(
+                configuration,
+              ) ??
+              SelectedCategories(
+                configuration: configuration,
+              ),
           _ShopContents(
             configuration: configuration,
           ),
@@ -203,31 +209,16 @@ class _ShopContents extends StatelessWidget {
             }
           }
 
-          var productPageContent = snapshot.data;
+          List<Product> productPageContent;
 
-          if (productPageContent == null || productPageContent.isEmpty) {
+          productPageContent =
+              configuration.shoppingService.productService.products;
+
+          if (productPageContent.isEmpty) {
             return configuration.noContentBuilder?.call(context) ??
                 const DefaultNoContent();
           }
 
-          var productList = Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: Column(
-              children: [
-                // Products
-
-                getCategoryList(
-                  context,
-                  configuration,
-                  productPageContent,
-                ),
-
-                // Bottom padding so the last product is not cut off
-                // by the to shopping cart button.
-                const SizedBox(height: 48),
-              ],
-            ),
-          );
           var discountedproducts = productPageContent
               .where((product) => product.hasDiscount)
               .toList();
@@ -264,10 +255,84 @@ class _ShopContents extends StatelessWidget {
                     configuration,
                     productPageContent,
                   ) ??
-                  productList,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                    child: Column(
+                      children: [
+                        // Products
+
+                        ListenableBuilder(
+                          listenable:
+                              configuration.shoppingService.productService,
+                          builder: (context, _) => getCategoryList(
+                            context,
+                            configuration,
+                            configuration
+                                .shoppingService.productService.products,
+                          ),
+                        ),
+
+                        // Bottom padding so the last product is not cut off
+                        // by the to shopping cart button.
+                        const SizedBox(height: 48),
+                      ],
+                    ),
+                  ),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Selected categories.
+class SelectedCategories extends StatelessWidget {
+  /// Constructor for the selected categories.
+  const SelectedCategories({
+    required this.configuration,
+    super.key,
+  });
+
+  /// Configuration for the product page.
+  final ProductPageConfiguration configuration;
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    return ListenableBuilder(
+      listenable: configuration.shoppingService.productService,
+      builder: (context, _) => Padding(
+        padding: const EdgeInsets.only(left: 4),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (var category in configuration
+                  .shoppingService.productService.selectedCategories) ...[
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Chip(
+                    backgroundColor: theme.colorScheme.primary,
+                    deleteIcon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    onDeleted: () {
+                      configuration.shoppingService.productService
+                          .selectCategory(category);
+                    },
+                    label: Text(
+                      category,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
