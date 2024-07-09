@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
 
-
 /// Default next button for the order details page.
 class DefaultNextButton extends StatelessWidget {
   /// Constructor for the default next button for the order details page.
@@ -15,10 +14,13 @@ class DefaultNextButton extends StatelessWidget {
 
   /// Configuration for the order details page.
   final OrderDetailConfiguration configuration;
+
   /// Controller for the form.
   final FlutterFormController controller;
+
   /// Current step in the form.
   final int currentStep;
+
   /// Whether the form is checking pages.
   final bool checkingPages;
   @override

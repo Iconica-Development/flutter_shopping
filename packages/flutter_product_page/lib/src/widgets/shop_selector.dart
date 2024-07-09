@@ -5,7 +5,7 @@ import "package:flutter_product_page/src/widgets/spaced_wrap.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// Shop selector widget that displays a list to navigate between shops.
-class ShopSelector extends StatelessWidget {
+class ShopSelector extends StatefulWidget {
   /// Constructor for the shop selector.
   const ShopSelector({
     required this.configuration,
@@ -34,29 +34,52 @@ class ShopSelector extends StatelessWidget {
   final double paddingOnButtons;
 
   @override
+  State<ShopSelector> createState() => _ShopSelectorState();
+}
+
+class _ShopSelectorState extends State<ShopSelector> {
+  @override
+  void initState() {
+    widget.configuration.shoppingService.shopService.addListener(_listen);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.configuration.shoppingService.shopService.removeListener(_listen);
+    super.dispose();
+  }
+
+  void _listen() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (shops.length == 1) {
+    if (widget.shops.length == 1) {
       return const SizedBox.shrink();
     }
 
-    if (configuration.shopSelectorStyle == ShopSelectorStyle.spacedWrap) {
+    if (widget.configuration.shopSelectorStyle ==
+        ShopSelectorStyle.spacedWrap) {
       return SpacedWrap(
-        shops: shops,
+        shops: widget.shops,
         selectedItem:
-            configuration.shoppingService.shopService.selectedShop!.id,
-        onTap: onTap,
+            widget.configuration.shoppingService.shopService.selectedShop!.id,
+        onTap: widget.onTap,
         width: MediaQuery.of(context).size.width - (16 * 2),
-        paddingBetweenButtons: paddingBetweenButtons,
-        paddingOnButtons: paddingOnButtons,
+        paddingBetweenButtons: widget.paddingBetweenButtons,
+        paddingOnButtons: widget.paddingOnButtons,
       );
     }
 
     return HorizontalListItems(
-      shops: shops,
-      selectedItem: configuration.shoppingService.shopService.selectedShop!.id,
-      onTap: onTap,
-      paddingBetweenButtons: paddingBetweenButtons,
-      paddingOnButtons: paddingOnButtons,
+      shops: widget.shops,
+      selectedItem:
+          widget.configuration.shoppingService.shopService.selectedShop!.id,
+      onTap: widget.onTap,
+      paddingBetweenButtons: widget.paddingBetweenButtons,
+      paddingOnButtons: widget.paddingOnButtons,
     );
   }
 }

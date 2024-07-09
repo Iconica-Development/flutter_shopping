@@ -37,10 +37,8 @@ class ShoppingProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var service = shoppingConfiguration.shoppingService;
     return ProductPageScreen(
-      initialBuildShopId: shoppingConfiguration.initialShopid,
       configuration: ProductPageConfiguration(
         shoppingService: service,
-        initialShopId: shoppingConfiguration.initialShopid,
         shoppingCartButtonBuilder:
             shoppingConfiguration.shoppingCartButtonBuilder,
         productBuilder: shoppingConfiguration.productBuilder,

@@ -62,7 +62,17 @@ class LocalProductService with ChangeNotifier implements ProductService {
         description: "This is a delicious Brown fish",
       ),
     ];
+
+    // only return items that match the selectedcategories
     _allProducts = List.from(_products);
+
+    _products = _products.where((element) {
+      if (_selectedCategories.isEmpty) {
+        return true;
+      }
+      return _selectedCategories.contains(element.category);
+    }).toList();
+
     return Future.value(_products);
   }
 

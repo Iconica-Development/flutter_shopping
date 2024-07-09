@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter_product_page/flutter_product_page.dart";
 import "package:flutter_product_page/src/services/category_service.dart";
@@ -5,41 +6,44 @@ import "package:flutter_product_page/src/widgets/defaults/default_appbar.dart";
 import "package:flutter_product_page/src/widgets/defaults/default_error.dart";
 import "package:flutter_product_page/src/widgets/defaults/default_no_content.dart";
 import "package:flutter_product_page/src/widgets/defaults/default_shopping_cart_button.dart";
+import "package:flutter_product_page/src/widgets/defaults/selected_categories.dart";
 import "package:flutter_product_page/src/widgets/shop_selector.dart";
 import "package:flutter_product_page/src/widgets/weekly_discount.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// A page that displays products.
-class ProductPageScreen extends StatelessWidget {
+class ProductPageScreen extends StatefulWidget {
   /// Constructor for the product page.
   const ProductPageScreen({
     required this.configuration,
-    this.initialBuildShopId,
     super.key,
   });
 
   /// Configuration for the product page.
   final ProductPageConfiguration configuration;
 
-  /// An optional initial shop ID to select. This overrides the initialShopId
-  /// from the configuration.
-  final String? initialBuildShopId;
+  @override
+  State<ProductPageScreen> createState() => _ProductPageScreenState();
+}
 
+class _ProductPageScreenState extends State<ProductPageScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: configuration.appBarBuilder?.call(context) ??
+        appBar: widget.configuration.appBarBuilder?.call(context) ??
             DefaultAppbar(
-              configuration: configuration,
+              configuration: widget.configuration,
             ),
-        bottomNavigationBar: configuration.bottomNavigationBar,
+        bottomNavigationBar: widget.configuration.bottomNavigationBar,
         body: SafeArea(
           child: Padding(
-            padding: configuration.pagePadding,
+            padding: widget.configuration.pagePadding,
             child: FutureBuilder(
               // ignore: discarded_futures
-              future: configuration.shops(),
-              builder: (BuildContext context, AsyncSnapshot data) {
-                if (data.connectionState == ConnectionState.waiting) {
+              future: widget.configuration.shops(),
+              builder: (context, snapshot) {
+                List<Shop>? shops;
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -49,106 +53,47 @@ class ProductPageScreen extends StatelessWidget {
                   );
                 }
 
-                if (data.hasError) {
-                  return configuration.errorBuilder?.call(
+                if (snapshot.hasError) {
+                  return widget.configuration.errorBuilder?.call(
                         context,
-                        data.error,
+                        snapshot.error,
                       ) ??
                       DefaultError(
-                        error: data.error,
+                        error: snapshot.error,
                       );
                 }
 
-                List<Shop>? shops = data.data;
+                shops = snapshot.data;
 
                 if (shops == null || shops.isEmpty) {
-                  return configuration.errorBuilder?.call(
+                  return widget.configuration.errorBuilder?.call(
                         context,
-                        data.error,
+                        snapshot.error,
                       ) ??
-                      DefaultError(error: data.error);
+                      DefaultError(error: snapshot.error);
                 }
 
-                if (initialBuildShopId != null) {
-                  Shop? initialShop;
-
-                  for (var shop in shops) {
-                    if (shop.id == initialBuildShopId) {
-                      initialShop = shop;
-                      break;
-                    }
+                if (widget.configuration.initialShopId != null) {
+                  var initialShop = shops.firstWhereOrNull(
+                    (shop) => shop.id == widget.configuration.initialShopId,
+                  );
+                  if (initialShop != null) {
+                    widget.configuration.shoppingService.shopService.selectShop(
+                      initialShop,
+                    );
+                  } else {
+                    widget.configuration.shoppingService.shopService.selectShop(
+                      shops.first,
+                    );
                   }
-
-                  configuration.shoppingService.shopService
-                      .selectShop(initialShop ?? shops.first);
-                } else if (configuration.initialShopId != null) {
-                  Shop? initialShop;
-
-                  for (var shop in shops) {
-                    if (shop.id == configuration.initialShopId) {
-                      initialShop = shop;
-                      break;
-                    }
-                  }
-
-                  configuration.shoppingService.shopService
-                      .selectShop(initialShop ?? shops.first);
                 } else {
-                  configuration.shoppingService.shopService
-                      .selectShop(shops.first);
+                  widget.configuration.shoppingService.shopService.selectShop(
+                    shops.first,
+                  );
                 }
-
-                return ListenableBuilder(
-                  listenable: configuration.shoppingService.shopService,
-                  builder: (BuildContext context, Widget? _) {
-                    configuration.onShopSelectionChange?.call(
-                      configuration.shoppingService.shopService.selectedShop!,
-                    );
-                    return Stack(
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              configuration.shopselectorBuilder?.call(
-                                    context,
-                                    configuration,
-                                    shops,
-                                    configuration
-                                        .shoppingService.shopService.selectShop,
-                                  ) ??
-                                  ShopSelector(
-                                    configuration: configuration,
-                                    shops: shops,
-                                    onTap: configuration
-                                        .shoppingService.shopService.selectShop,
-                                  ),
-                              configuration.selectedCategoryBuilder?.call(
-                                    configuration,
-                                  ) ??
-                                  SelectedCategories(
-                                    configuration: configuration,
-                                  ),
-                              _ShopContents(
-                                configuration: configuration,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: configuration.shoppingCartButtonBuilder != null
-                              ? configuration.shoppingCartButtonBuilder!(
-                                  context,
-                                  configuration,
-                                )
-                              : DefaultShoppingCartButton(
-                                  configuration: configuration,
-                                ),
-                        ),
-                      ],
-                    );
-                  },
+                return _ProductPageContent(
+                  configuration: widget.configuration,
+                  shops: shops,
                 );
               },
             ),
@@ -157,7 +102,76 @@ class ProductPageScreen extends StatelessWidget {
       );
 }
 
-class _ShopContents extends StatelessWidget {
+class _ProductPageContent extends StatefulWidget {
+  const _ProductPageContent({
+    required this.configuration,
+    required this.shops,
+  });
+
+  final ProductPageConfiguration configuration;
+
+  final List<Shop> shops;
+
+  @override
+  State<_ProductPageContent> createState() => _ProductPageContentState();
+}
+
+class _ProductPageContentState extends State<_ProductPageContent> {
+  @override
+  Widget build(BuildContext context) => Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // shop selector
+                widget.configuration.shopselectorBuilder?.call(
+                      context,
+                      widget.configuration,
+                      widget.shops,
+                      widget
+                          .configuration.shoppingService.shopService.selectShop,
+                    ) ??
+                    ShopSelector(
+                      configuration: widget.configuration,
+                      shops: widget.shops,
+                      onTap: (shop) {
+                        widget.configuration.shoppingService.shopService
+                            .selectShop(shop);
+                      },
+                    ),
+                // selected categories
+                widget.configuration.selectedCategoryBuilder?.call(
+                      widget.configuration,
+                    ) ??
+                    SelectedCategories(
+                      configuration: widget.configuration,
+                    ),
+                // products
+                _ShopContents(
+                  configuration: widget.configuration,
+                ),
+              ],
+            ),
+          ),
+
+          // button
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: widget.configuration.shoppingCartButtonBuilder != null
+                ? widget.configuration.shoppingCartButtonBuilder!(
+                    context,
+                    widget.configuration,
+                  )
+                : DefaultShoppingCartButton(
+                    configuration: widget.configuration,
+                  ),
+          ),
+        ],
+      );
+}
+
+class _ShopContents extends StatefulWidget {
   const _ShopContents({
     required this.configuration,
   });
@@ -165,25 +179,53 @@ class _ShopContents extends StatelessWidget {
   final ProductPageConfiguration configuration;
 
   @override
+  State<_ShopContents> createState() => _ShopContentsState();
+}
+
+class _ShopContentsState extends State<_ShopContents> {
+  @override
+  void initState() {
+    widget.configuration.shoppingService.shopService.addListener(_listen);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.configuration.shoppingService.shopService.removeListener(_listen);
+    super.dispose();
+  }
+
+  void _listen() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: configuration.pagePadding.horizontal,
+        horizontal: widget.configuration.pagePadding.horizontal,
       ),
       child: FutureBuilder(
         // ignore: discarded_futures
-        future: configuration.getProducts(
-          configuration.shoppingService.shopService.selectedShop!,
+        future: widget.configuration.getProducts(
+          widget.configuration.shoppingService.shopService.selectedShop!,
         ),
         builder: (context, snapshot) {
+          List<Product> productPageContent;
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator.adaptive());
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            );
           }
 
           if (snapshot.hasError) {
-            if (configuration.errorBuilder != null) {
-              return configuration.errorBuilder!(
+            if (widget.configuration.errorBuilder != null) {
+              return widget.configuration.errorBuilder!(
                 context,
                 snapshot.error,
               );
@@ -192,13 +234,11 @@ class _ShopContents extends StatelessWidget {
             }
           }
 
-          List<Product> productPageContent;
-
           productPageContent =
-              configuration.shoppingService.productService.products;
+              widget.configuration.shoppingService.productService.products;
 
           if (productPageContent.isEmpty) {
-            return configuration.noContentBuilder?.call(context) ??
+            return widget.configuration.noContentBuilder?.call(context) ??
                 const DefaultNoContent();
           }
 
@@ -210,15 +250,15 @@ class _ShopContents extends StatelessWidget {
             children: [
               // Discounted product
               if (discountedproducts.isNotEmpty) ...[
-                configuration.discountBuilder?.call(
+                widget.configuration.discountBuilder?.call(
                       context,
-                      configuration,
+                      widget.configuration,
                       discountedproducts,
                     ) ??
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: WeeklyDiscount(
-                        configuration: configuration,
+                        configuration: widget.configuration,
                         product: discountedproducts.first,
                       ),
                     ),
@@ -227,15 +267,15 @@ class _ShopContents extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                 child: Text(
-                  configuration.translations.categoryItemListTitle,
+                  widget.configuration.translations.categoryItemListTitle,
                   style: theme.textTheme.titleLarge,
                   textAlign: TextAlign.start,
                 ),
               ),
 
-              configuration.categoryListBuilder?.call(
+              widget.configuration.categoryListBuilder?.call(
                     context,
-                    configuration,
+                    widget.configuration,
                     productPageContent,
                   ) ??
                   Padding(
@@ -244,15 +284,11 @@ class _ShopContents extends StatelessWidget {
                       children: [
                         // Products
 
-                        ListenableBuilder(
-                          listenable:
-                              configuration.shoppingService.productService,
-                          builder: (context, _) => getCategoryList(
-                            context,
-                            configuration,
-                            configuration
-                                .shoppingService.productService.products,
-                          ),
+                        getCategoryList(
+                          context,
+                          widget.configuration,
+                          widget.configuration.shoppingService.productService
+                              .products,
                         ),
 
                         // Bottom padding so the last product is not cut off
@@ -264,58 +300,6 @@ class _ShopContents extends StatelessWidget {
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-/// Selected categories.
-class SelectedCategories extends StatelessWidget {
-  /// Constructor for the selected categories.
-  const SelectedCategories({
-    required this.configuration,
-    super.key,
-  });
-
-  /// Configuration for the product page.
-  final ProductPageConfiguration configuration;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    return ListenableBuilder(
-      listenable: configuration.shoppingService.productService,
-      builder: (context, _) => Padding(
-        padding: const EdgeInsets.only(left: 4),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (var category in configuration
-                  .shoppingService.productService.selectedCategories) ...[
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Chip(
-                    backgroundColor: theme.colorScheme.primary,
-                    deleteIcon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    onDeleted: () {
-                      configuration.shoppingService.productService
-                          .selectCategory(category);
-                    },
-                    label: Text(
-                      category,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
       ),
     );
   }

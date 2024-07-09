@@ -14,7 +14,6 @@ class ShoppingConfiguration {
     this.onNavigateToShoppingCart,
     this.getProductsInShoppingCart,
     this.shoppingCartButtonBuilder,
-    this.initialShopid,
     this.productBuilder,
     this.onShopSelectionChange,
     this.productPageTranslations,
@@ -81,9 +80,6 @@ class ShoppingConfiguration {
   /// Default shopping cart button builder
   final Widget Function(BuildContext, ProductPageConfiguration)?
       shoppingCartButtonBuilder;
-
-  /// Initial shop that will be selected
-  final String? initialShopid;
 
   /// ProductPage item builder
   final Widget Function(
