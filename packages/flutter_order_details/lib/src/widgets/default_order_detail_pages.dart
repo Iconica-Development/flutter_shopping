@@ -2,9 +2,11 @@ import "package:animated_toggle/animated_toggle.dart";
 import "package:flutter/material.dart";
 import "package:flutter_order_details/flutter_order_details.dart";
 
-
 /// Default pages for the order details screen.
-List<FlutterFormPage> defaultPages(BuildContext context) {
+List<FlutterFormPage> defaultPages(
+  BuildContext context,
+  Function() onSwitched,
+) {
   var theme = Theme.of(context);
 
   var morningTimes = <String>[
@@ -307,30 +309,25 @@ List<FlutterFormPage> defaultPages(BuildContext context) {
                 toggleColor: theme.colorScheme.primary,
                 onSwitch: (value) {
                   switchStatus.value = value;
+                  onSwitched();
                 },
                 childLeft: Center(
-                  child: ListenableBuilder(
-                    listenable: switchStatus,
-                    builder: (context, widget) => Text(
-                      "Morning",
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: switchStatus.value
-                            ? theme.colorScheme.primary
-                            : Colors.white,
-                      ),
+                  child: Text(
+                    "Morning",
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: switchStatus.value
+                          ? theme.colorScheme.primary
+                          : Colors.white,
                     ),
                   ),
                 ),
                 childRight: Center(
-                  child: ListenableBuilder(
-                    listenable: switchStatus,
-                    builder: (context, widget) => Text(
-                      "Afternoon",
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: switchStatus.value
-                            ? Colors.white
-                            : theme.colorScheme.primary,
-                      ),
+                  child: Text(
+                    "Afternoon",
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: switchStatus.value
+                          ? Colors.white
+                          : theme.colorScheme.primary,
                     ),
                   ),
                 ),
@@ -339,35 +336,31 @@ List<FlutterFormPage> defaultPages(BuildContext context) {
             const SizedBox(
               height: 8,
             ),
-            ListenableBuilder(
-              listenable: switchStatus,
-              builder: (context, widget) => FlutterFormInputMultipleChoice(
-                validationMessage: "Select a Time",
-                controller: multipleChoiceController,
-                options: switchStatus.value ? afternoonTimes : morningTimes,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                childAspectRatio: 2,
-                height: MediaQuery.of(context).size.height * 0.6,
-                builder:
-                    (context, index, selected, controller, options, state) =>
-                        GestureDetector(
-                  onTap: () {
-                    state.didChange(options[index]);
-                    selected.value = index;
-                    controller.onSaved(options[index]);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: selected.value == index
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    height: 40,
-                    child: Center(
-                      child: Text(options[index]),
-                    ),
+            FlutterFormInputMultipleChoice(
+              validationMessage: "Select a Time",
+              controller: multipleChoiceController,
+              options: switchStatus.value ? afternoonTimes : morningTimes,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+              childAspectRatio: 2,
+              height: MediaQuery.of(context).size.height * 0.6,
+              builder: (context, index, selected, controller, options, state) =>
+                  GestureDetector(
+                onTap: () {
+                  state.didChange(options[index]);
+                  selected.value = index;
+                  controller.onSaved(options[index]);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: selected.value == index
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  height: 40,
+                  child: Center(
+                    child: Text(options[index]),
                   ),
                 ),
               ),

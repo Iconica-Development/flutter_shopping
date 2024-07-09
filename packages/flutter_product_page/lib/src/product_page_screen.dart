@@ -54,7 +54,9 @@ class ProductPageScreen extends StatelessWidget {
                         context,
                         data.error,
                       ) ??
-                      DefaultError(error: data.error);
+                      DefaultError(
+                        error: data.error,
+                      );
                 }
 
                 List<Shop>? shops = data.data;
@@ -102,9 +104,49 @@ class ProductPageScreen extends StatelessWidget {
                     configuration.onShopSelectionChange?.call(
                       configuration.shoppingService.shopService.selectedShop!,
                     );
-                    return _ProductPage(
-                      configuration: configuration,
-                      shops: shops,
+                    return Stack(
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              configuration.shopselectorBuilder?.call(
+                                    context,
+                                    configuration,
+                                    shops,
+                                    configuration
+                                        .shoppingService.shopService.selectShop,
+                                  ) ??
+                                  ShopSelector(
+                                    configuration: configuration,
+                                    shops: shops,
+                                    onTap: configuration
+                                        .shoppingService.shopService.selectShop,
+                                  ),
+                              configuration.selectedCategoryBuilder?.call(
+                                    configuration,
+                                  ) ??
+                                  SelectedCategories(
+                                    configuration: configuration,
+                                  ),
+                              _ShopContents(
+                                configuration: configuration,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: configuration.shoppingCartButtonBuilder != null
+                              ? configuration.shoppingCartButtonBuilder!(
+                                  context,
+                                  configuration,
+                                )
+                              : DefaultShoppingCartButton(
+                                  configuration: configuration,
+                                ),
+                        ),
+                      ],
                     );
                   },
                 );
@@ -113,65 +155,6 @@ class ProductPageScreen extends StatelessWidget {
           ),
         ),
       );
-}
-
-class _ProductPage extends StatelessWidget {
-  const _ProductPage({
-    required this.configuration,
-    required this.shops,
-  });
-
-  final ProductPageConfiguration configuration;
-
-  final List<Shop> shops;
-
-  @override
-  Widget build(BuildContext context) {
-    var pageContent = SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          configuration.shopselectorBuilder?.call(
-                context,
-                configuration,
-                shops,
-                configuration.shoppingService.shopService.selectShop,
-              ) ??
-              ShopSelector(
-                configuration: configuration,
-                shops: shops,
-                onTap: configuration.shoppingService.shopService.selectShop,
-              ),
-          configuration.selectedCategoryBuilder?.call(
-                configuration,
-              ) ??
-              SelectedCategories(
-                configuration: configuration,
-              ),
-          _ShopContents(
-            configuration: configuration,
-          ),
-        ],
-      ),
-    );
-
-    return Stack(
-      children: [
-        pageContent,
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: configuration.shoppingCartButtonBuilder != null
-              ? configuration.shoppingCartButtonBuilder!(
-                  context,
-                  configuration,
-                )
-              : DefaultShoppingCartButton(
-                  configuration: configuration,
-                ),
-        ),
-      ],
-    );
-  }
 }
 
 class _ShopContents extends StatelessWidget {

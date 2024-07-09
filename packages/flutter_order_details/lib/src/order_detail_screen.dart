@@ -49,7 +49,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 checkingPages: checkingPages,
               ),
           pages: widget.configuration.pages?.call(context) ??
-              defaultPages(context),
+              defaultPages(context, () {
+                setState(() {});
+              }),
           onFinished: (data) async {
             widget.configuration.onStepsCompleted.call(
               widget.configuration.shoppingService.shopService.selectedShop!.id,

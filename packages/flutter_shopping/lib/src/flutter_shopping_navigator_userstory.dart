@@ -1,15 +1,16 @@
-// ignore_for_file: public_member_api_docs
-
 import "package:flutter/material.dart";
 import "package:flutter_shopping/flutter_shopping.dart";
 import "package:flutter_shopping_local/flutter_shopping_local.dart";
 
+/// User story for the shopping navigator.
 class ShoppingNavigatorUserStory extends StatelessWidget {
+  /// Constructor for the shopping navigator user story.
   const ShoppingNavigatorUserStory({
     this.shoppingConfiguration,
     super.key,
   });
 
+  /// Shopping configuration.
   final ShoppingConfiguration? shoppingConfiguration;
 
   @override
@@ -21,11 +22,15 @@ class ShoppingNavigatorUserStory extends StatelessWidget {
       );
 }
 
+/// Shopping product page.
 class ShoppingProductPage extends StatelessWidget {
+  /// Constructor for the shopping product page.
   const ShoppingProductPage({
     required this.shoppingConfiguration,
     super.key,
   });
+
+  /// Shopping configuration.
   final ShoppingConfiguration shoppingConfiguration;
 
   @override
@@ -103,12 +108,15 @@ class ShoppingProductPage extends StatelessWidget {
   }
 }
 
+/// Shopping cart.
 class ShoppingCart extends StatelessWidget {
+  /// Constructor for the shopping cart.
   const ShoppingCart({
     required this.shoppingConfiguration,
     super.key,
   });
 
+  /// Shopping configuration.
   final ShoppingConfiguration shoppingConfiguration;
 
   @override
@@ -150,12 +158,15 @@ class ShoppingCart extends StatelessWidget {
   }
 }
 
+/// Shopping order details.
 class ShoppingOrderDetails extends StatelessWidget {
+  /// Constructor for the shopping order details.
   const ShoppingOrderDetails({
     required this.shoppingConfiguration,
     super.key,
   });
 
+  /// Shopping configuration.
   final ShoppingConfiguration shoppingConfiguration;
 
   @override
