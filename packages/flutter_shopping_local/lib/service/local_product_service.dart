@@ -4,10 +4,12 @@ import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 /// Local product service
 class LocalProductService with ChangeNotifier implements ProductService {
   List<Product> _products = [];
+  List<Product> _allProducts = [];
+  final List<String> _selectedCategories = [];
 
   @override
   List<String> getCategories() =>
-      _products.map((e) => e.category).toSet().toList();
+      _allProducts.map((e) => e.category).toSet().toList();
 
   @override
   Future<Product> getProduct(String id) =>
@@ -60,6 +62,42 @@ class LocalProductService with ChangeNotifier implements ProductService {
         description: "This is a delicious Brown fish",
       ),
     ];
+
+    // only return items that match the selectedcategories
+    _allProducts = List.from(_products);
+
+    _products = _products.where((element) {
+      if (_selectedCategories.isEmpty) {
+        return true;
+      }
+      return _selectedCategories.contains(element.category);
+    }).toList();
+
     return Future.value(_products);
   }
+
+  @override
+  List<Product> get products => _products;
+
+  @override
+  void selectCategory(String category) {
+    if (_selectedCategories.contains(category)) {
+      _selectedCategories.remove(category);
+    } else {
+      _selectedCategories.add(category);
+    }
+    if (_selectedCategories.isEmpty) {
+      _products = List.from(_allProducts);
+    }
+    _products = _allProducts.where((element) {
+      if (_selectedCategories.isEmpty) {
+        return true;
+      }
+      return _selectedCategories.contains(element.category);
+    }).toList();
+    notifyListeners();
+  }
+
+  @override
+  List<String> get selectedCategories => _selectedCategories;
 }

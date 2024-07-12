@@ -1,21 +1,20 @@
 name: flutter_shopping_cart
 description: "A Flutter module for a shopping cart."
 version: 2.0.0
-publish_to: 'none'
+publish_to: "none"
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_shopping:
+  flutter_shopping_interface:
     git:
       url: https://github.com/Iconica-Development/flutter_shopping
-      path: packages/flutter_shopping
+      path: packages/flutter_shopping_interface
       ref: 2.0.0
-
 
 dev_dependencies:
   flutter_test:

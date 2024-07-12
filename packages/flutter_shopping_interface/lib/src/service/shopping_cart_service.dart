@@ -17,4 +17,7 @@ abstract class ShoppingCartService with ChangeNotifier {
 
   /// Clears the shopping cart.
   void clear();
+
+  /// The list of products in the shopping cart.
+  List<Product> get products;
 }

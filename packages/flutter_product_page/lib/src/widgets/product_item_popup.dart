@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
 import "package:flutter_shopping_interface/flutter_shopping_interface.dart";
 
 /// A popup that displays the product item.
@@ -7,7 +6,7 @@ class ProductItemPopup extends StatelessWidget {
   /// Constructor for the product item popup.
   const ProductItemPopup({
     required this.product,
-    required this.configuration,
+    required this.closeText,
     super.key,
   });
 
@@ -15,7 +14,7 @@ class ProductItemPopup extends StatelessWidget {
   final Product product;
 
   /// Configuration for the product page.
-  final ShoppingCartConfig configuration;
+  final String closeText;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class ProductItemPopup extends StatelessWidget {
                         vertical: 8.0,
                       ),
                       child: Text(
-                        configuration.translations.close,
+                        closeText,
                         style: theme.textTheme.displayLarge,
                       ),
                     ),

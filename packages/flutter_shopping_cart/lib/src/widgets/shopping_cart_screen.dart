@@ -1,8 +1,12 @@
 import "package:flutter/material.dart";
-import "package:flutter_shopping/flutter_shopping.dart";
+import "package:flutter_shopping_cart/flutter_shopping_cart.dart";
+import "package:flutter_shopping_cart/src/widgets/default_appbar.dart";
+import "package:flutter_shopping_cart/src/widgets/default_confirm_order_button.dart";
+import "package:flutter_shopping_cart/src/widgets/default_shopping_cart_item.dart";
+import "package:flutter_shopping_cart/src/widgets/default_sum_bottom_sheet_builder.dart";
 
 /// Shopping cart screen widget.
-class ShoppingCartScreen<T extends Product> extends StatelessWidget {
+class ShoppingCartScreen extends StatefulWidget {
   /// Creates a shopping cart screen.
   const ShoppingCartScreen({
     required this.configuration,
@@ -10,86 +14,85 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
   });
 
   /// Configuration for the shopping cart screen.
-  final ShoppingCartConfig<T> configuration;
+  final ShoppingCartConfig configuration;
 
+  @override
+  State<ShoppingCartScreen> createState() => _ShoppingCartScreenState();
+}
+
+class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    var productBuilder = SingleChildScrollView(
-      child: Column(
-        children: [
-          if (configuration.titleBuilder != null) ...{
-            configuration.titleBuilder!(context),
-          } else ...{
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 32,
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    configuration.localizations.cartTitle,
-                    style: theme.textTheme.titleLarge,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-            ),
-          },
-          ListenableBuilder(
-            listenable: configuration.productService,
-            builder: (context, _) {
-              var products = configuration.productService.products;
-
-              if (products.isEmpty) {
-                return configuration.noContentBuilder(context);
-              }
-
-              return Column(
-                children: [
-                  for (var product in products)
-                    configuration.productItemBuilder(
-                      context,
-                      configuration.localizations.locale,
-                      product,
-                      configuration.productService,
-                      configuration,
-                    ),
-                  // Additional whitespace at the bottom to make sure the
-                  // last product(s) are not hidden by the bottom sheet.
-                  SizedBox(
-                    height: configuration.confirmOrderButtonHeight +
-                        configuration.sumBottomSheetHeight,
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-
     return Scaffold(
-      appBar: configuration.appBar ??
-          AppBar(
-            title: Text(
-              "Shopping cart",
-              style: theme.textTheme.headlineLarge,
-            ),
-          ),
+      appBar: widget.configuration.appBarBuilder?.call(context) ??
+          const DefaultAppbar(),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: [
             Padding(
-              padding: configuration.padding,
-              child: productBuilder,
+              padding: widget.configuration.pagePadding,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (widget.configuration.titleBuilder != null) ...{
+                      widget.configuration.titleBuilder!(
+                        context,
+                        widget.configuration.translations.cartTitle,
+                      ),
+                    } else ...{
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 32,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              widget.configuration.translations.cartTitle,
+                              style: theme.textTheme.titleLarge,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                    },
+                    Column(
+                      children: [
+                        for (var product
+                            in widget.configuration.service.products)
+                          widget.configuration.productItemBuilder?.call(
+                                context,
+                                product,
+                                widget.configuration,
+                              ) ??
+                              DefaultShoppingCartItem(
+                                product: product,
+                                configuration: widget.configuration,
+                                onItemAddedRemoved: () {
+                                  setState(() {});
+                                },
+                              ),
+
+                        // Additional whitespace at
+                        // the bottom to make sure the last
+                        // product(s) are not hidden by the bottom sheet.
+                        SizedBox(
+                          height:
+                              widget.configuration.confirmOrderButtonHeight +
+                                  widget.configuration.sumBottomSheetHeight,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: _BottomSheet<T>(
-                configuration: configuration,
+              child: _BottomSheet(
+                configuration: widget.configuration,
               ),
             ),
           ],
@@ -99,124 +102,30 @@ class ShoppingCartScreen<T extends Product> extends StatelessWidget {
   }
 }
 
-class _BottomSheet<T extends Product> extends StatelessWidget {
+class _BottomSheet extends StatelessWidget {
   const _BottomSheet({
-    required this.configuration,
-    super.key,
-  });
-
-  final ShoppingCartConfig<T> configuration;
-
-  @override
-  Widget build(BuildContext context) {
-    var placeOrderButton = ListenableBuilder(
-      listenable: configuration.productService,
-      builder: (BuildContext context, Widget? child) =>
-          configuration.confirmOrderButtonBuilder != null
-              ? configuration.confirmOrderButtonBuilder!(context)
-              : _DefaultConfirmOrderButton<T>(configuration: configuration),
-    );
-
-    var bottomSheet = ListenableBuilder(
-      listenable: configuration.productService,
-      builder: (BuildContext context, Widget? child) =>
-          configuration.sumBottomSheetBuilder != null
-              ? configuration.sumBottomSheetBuilder!(context)
-              : _DefaultSumBottomSheet(configuration: configuration),
-    );
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        bottomSheet,
-        placeOrderButton,
-      ],
-    );
-  }
-}
-
-class _DefaultConfirmOrderButton<T extends Product> extends StatelessWidget {
-  const _DefaultConfirmOrderButton({
-    required this.configuration,
-  });
-
-  final ShoppingCartConfig<T> configuration;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    void onConfirmOrderPressed(List<T> products) {
-      if (configuration.onConfirmOrder == null) {
-        return;
-      }
-
-      if (products.isEmpty) {
-        return;
-      }
-
-      configuration.onConfirmOrder!(products);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 60),
-      child: SizedBox(
-        width: double.infinity,
-        child: FilledButton(
-          onPressed: () => onConfirmOrderPressed(
-            configuration.productService.products,
-          ),
-          style: theme.filledButtonTheme.style?.copyWith(
-            backgroundColor: WidgetStateProperty.all(
-              theme.colorScheme.primary,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12,
-            ),
-            child: Text(
-              configuration.localizations.placeOrder,
-              style: theme.textTheme.displayLarge,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DefaultSumBottomSheet extends StatelessWidget {
-  const _DefaultSumBottomSheet({
     required this.configuration,
   });
 
   final ShoppingCartConfig configuration;
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
-    var totalPrice = configuration.productService.products
-        .map((product) => product.price * product.quantity)
-        .fold(0.0, (a, b) => a + b);
-
-    return Padding(
-      padding: configuration.bottomPadding,
-      child: Row(
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            configuration.localizations.sum,
-            style: theme.textTheme.titleMedium,
-          ),
-          const Spacer(),
-          Text(
-            "€ ${totalPrice.toStringAsFixed(2)}",
-            style: theme.textTheme.bodyMedium,
-          ),
+          configuration.sumBottomSheetBuilder?.call(context, configuration) ??
+              DefaultSumBottomSheetBuilder(
+                configuration: configuration,
+              ),
+          configuration.confirmOrderButtonBuilder?.call(
+                context,
+                configuration,
+                configuration.onConfirmOrder,
+              ) ??
+              DefaultConfirmOrderButton(
+                configuration: configuration,
+                onConfirmOrder: configuration.onConfirmOrder,
+              ),
         ],
-      ),
-    );
-  }
+      );
 }
