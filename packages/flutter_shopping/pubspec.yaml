@@ -1,47 +1,37 @@
 name: flutter_shopping
-description: "A new Flutter project."
-publish_to: "none"
-version: 2.0.0
+description: "A new Flutter package project."
+version: 3.0.0
+homepage: https://github.com/Iconica-Development/flutter_shopping/packages/flutter_shopping
+publish_to: https://forgejo.internal.iconica.nl/api/packages/internal/pub/
 
 environment:
-  sdk: ">=3.3.4 <4.0.0"
+  sdk: ^3.5.1
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  go_router: any
-  flutter_product_page:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 2.0.0
-      path: packages/flutter_product_page
-  flutter_shopping_cart:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 2.0.0
-      path: packages/flutter_shopping_cart
-  flutter_order_details:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 2.0.0
-      path: packages/flutter_order_details
-  flutter_shopping_interface:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 2.0.0
-      path: packages/flutter_shopping_interface
-  flutter_shopping_local:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      ref: 2.0.0
-      path: packages/flutter_shopping_local
+  cached_network_image: ^3.4.1
+  rxdart: ^0.28.0
+  collection: ^1.18.0
+
+  animated_toggle:
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub/
+    version: ^0.0.3
+  flutter_form_wizard:
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub/
+    version: ^6.6.0
+
+  shopping_repository_interface:
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub/
+    version: ^3.0.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_iconica_analysis:
     git:
       url: https://github.com/Iconica-Development/flutter_iconica_analysis
       ref: 7.0.0
 
 flutter:
+  assets:
+    - assets/
