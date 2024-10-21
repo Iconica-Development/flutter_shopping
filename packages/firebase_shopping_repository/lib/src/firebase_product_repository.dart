@@ -6,12 +6,14 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shopping_repository_interface/shopping_repository_interface.dart';
 
 class FirebaseProductRepository implements ProductRepositoryInterface {
-  /// Shop one product
+  FirebaseProductRepository({
+    this.collectionName = 'shopping_products',
+  });
+
+  final String collectionName;
 
   final List<Product> _products = [];
-
   Product? _selectedProduct;
-
   final StreamController<List<Product>> _productStream =
       BehaviorSubject<List<Product>>();
 
@@ -22,7 +24,7 @@ class FirebaseProductRepository implements ProductRepositoryInterface {
   @override
   Stream<List<Product>> getProducts(List<Category>? categories, String shopId) {
     FirebaseFirestore.instance
-        .collection('shopping_products')
+        .collection(collectionName)
         .doc(shopId)
         .snapshots()
         .listen((event) {

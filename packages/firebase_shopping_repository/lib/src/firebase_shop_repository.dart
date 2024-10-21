@@ -5,11 +5,14 @@ import 'package:shopping_repository_interface/shopping_repository_interface.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseShopRepository implements ShopRepositoryInterface {
+  FirebaseShopRepository({
+    this.collectionName = 'shopping_shop',
+  });
+
+  final String collectionName;
   final StreamController<List<Shop>> _shopController =
       BehaviorSubject<List<Shop>>();
-
   Shop? _selectedShop;
-
   List<Shop> _shops = [];
 
   @override
@@ -25,7 +28,7 @@ class FirebaseShopRepository implements ShopRepositoryInterface {
   @override
   Stream<List<Shop>> getShops() {
     FirebaseFirestore.instance
-        .collection('shopping_shop')
+        .collection(collectionName)
         .snapshots()
         .listen((event) {
       List<Shop> shops = [];

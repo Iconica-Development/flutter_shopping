@@ -13,18 +13,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
-      home: const Home(),
+      home: const FlutterShopping(),
     );
   }
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class FlutterShopping extends StatelessWidget {
+  const FlutterShopping({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const FlutterShoppingNavigatorUserstory(
-      options: FlutterShoppingOptions(),
+    return FlutterShoppingNavigatorUserstory(
+      options: const FlutterShoppingOptions(),
+      translations: const ShoppingTranslations(),
+      shoppingService: ShoppingService(),
+      initialShopId: "1",
     );
   }
 }

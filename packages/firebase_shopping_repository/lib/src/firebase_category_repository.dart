@@ -5,15 +5,19 @@ import 'package:shopping_repository_interface/shopping_repository_interface.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseCategoryRepository implements CategoryRepositoryInterface {
+  FirebaseCategoryRepository({
+    this.collectionName = 'shopping_category',
+  });
+
+  final String collectionName;
+
   final StreamController<List<Category>> _categoryController =
       BehaviorSubject<List<Category>>();
-
   final StreamController<List<Category>> _selectedCategoriesController =
       BehaviorSubject<List<Category>>();
-
   List<Category> _selectedCategories = [];
-
   List<Category> _categories = [];
+
   @override
   void deselectCategory(String? categoryId) {
     _selectedCategories.removeWhere((category) => category.id == categoryId);
@@ -23,7 +27,7 @@ class FirebaseCategoryRepository implements CategoryRepositoryInterface {
   @override
   Stream<List<Category>> getCategories() {
     FirebaseFirestore.instance
-        .collection('shopping_category')
+        .collection(collectionName)
         .snapshots()
         .listen((event) {
       List<Category> categories = [];

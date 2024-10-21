@@ -6,7 +6,6 @@ import 'package:shopping_repository_interface/shopping_repository_interface.dart
 class FirebaseShoppingCartRepository
     implements ShoppingCartRepositoryInterface {
   var _cart = ShoppingCart(id: "1", products: []);
-
   final StreamController<ShoppingCart> _shoppingCartController =
       BehaviorSubject<ShoppingCart>();
 
