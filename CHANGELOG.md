@@ -1,3 +1,8 @@
+## 3.0.0
+- Refactored the project structure
+- Added `flutter_shopping_interface` package
+- Implemented default design
+
 ## 2.0.0
 - Added `flutter_shopping_interface` package
 - Implemented default design
