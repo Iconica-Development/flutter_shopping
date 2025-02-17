@@ -1,7 +1,9 @@
 name: flutter_order_details
 description: "A Flutter module for order details."
 version: 2.0.0
-publish_to: "none"
+repository: https://github.com/Iconica-Development/flutter_shopping
+
+publish_to: https://forgejo.internal.iconica.nl/api/packages/internal/pub
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -10,26 +12,19 @@ dependencies:
   flutter:
     sdk: flutter
   animated_toggle:
-    git:
-      url: https://github.com/Iconica-Development/flutter_animated_toggle
-      ref: 0.0.3
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: ^0.0.3
   flutter_form_wizard:
-    git:
-      url: https://github.com/Iconica-Development/flutter_form_wizard
-      ref: 6.5.0
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: ^6.5.0
   flutter_shopping_interface:
-    git:
-      url: https://github.com/Iconica-Development/flutter_shopping
-      path: packages/flutter_shopping_interface
-      ref: 2.0.0
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: ^2.0.0
   collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_iconica_analysis:
-    git:
-      url: https://github.com/Iconica-Development/flutter_iconica_analysis
-      ref: 7.0.0
-
-flutter:
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: 7.0.0
